@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Veterinary Tracker</title>
+  <!-- plugins:css -->
+  <link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
+  <link rel="stylesheet" href="../../vendors/base/vendor.bundle.base.css">
+  <!-- endinject -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../css/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../images/favicon.png" />
+  <!-- Sweet Alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    i {
+      color: #07476a;
+      font-size: 20px;
+    }
+
+    .containerTitle {
+      display: flex;
+      flex-direction: column;
+
+    }
+
+    .left-alignTitle {
+      text-align: left;
+    }
+
+    .right-alignTitle {
+      text-align: right;
+    }
+
+    .popup-form {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f0f0f0;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+      max-height: 80vh;
+      /* Set max height to 80% of the viewport height */
+      overflow-y: auto;
+      /* Enable vertical scrolling when content overflows */
+    }
+
+    .popup-form h2 {
+      margin: 0 0 10px 0;
+      font-size: 30px;
+      text-align: left;
+    }
+
+    .form-title-line {
+      border: none;
+      border-top: 1.5px solid #00d33f;
+      margin: 10px 0;
+    }
+
+    .popup-form input[type="text"],
+    .popup-form input[type="email"] {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      box-sizing: border-box;
+    }
+
+    .popup-form textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      box-sizing: border-box;
+    }
+
+    .popup-form input[type="button"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      box-sizing: border-box;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .popup-close {
+      float: right;
+      cursor: pointer;
+    }
+
+    .button-without-background {
+      background-color: transparent;
+      /* Set background color to transparent */
+      border: none;
+      /* Remove border */
+      padding: 0;
+      /* Remove padding */
+      /* Additional styles as needed */
+    }
+  </style>
+  <!-- fetch api -->
+  <script>
+    function calculateAge(dateOfBirth) {
+      // format of dateOfBirth: YYYY-MM-DD
+      const birthYear = parseInt(dateOfBirth.substring(0, 4), 10);
+
+      const today = new Date();
+      const currentYear = today.getFullYear();
+
+      let age = currentYear - birthYear;
+
+      // Do It Come To Birthday
+      const birthMonth = parseInt(dateOfBirth.substring(5, 7), 10);
+      const birthDay = parseInt(dateOfBirth.substring(8, 10), 10);
+
+      if (today.getMonth() + 1 < birthMonth ||
+        (today.getMonth() + 1 === birthMonth && today.getDate() < birthDay)) {
+        age--;
+      }
+
+      return age;
+    }
+
+    async function addUser() {
+      const payload = {
+        id_user: document.getElementById("new_id_user").value,
+        full_name: document.getElementById("new_full_name").value,
+        date_of_birth: document.getElementById("new_date_of_birth").value,
+        gender: document.getElementById("new_gender").value,
+        num_of_pets: parseInt(document.getElementById("new_num_of_pets").value)
+      };
+
+      try {
+        const response = await fetch(`http://localhost:3000/add-owner-user`, {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+
+        Swal.fire("New user has been added!");
+        RenderItem();
+      } catch (error) {
+        console.error(`Error: ${error.message}`);
+        Swal.fire("Error", "Failed to add data. Please try again.", "error");
+      }
+    }
+
+    function toggleAddUserForm() {
+      var form = document.getElementById('addUserForm');
+      form.style.display = form.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function editUserToggleForm(button) {
+      var form = document.getElementById('editUserForm');
+
+      if (form.style.display === 'block') {
+        form.style.display = 'none';
+        return;
+      } else {
+        form.style.display = 'block';
+      }
+
+      var row = button.parentNode.parentNode;
+      var id_user = row.cells[0].innerText;
+      var full_name = row.cells[1].innerText;
+      var date_of_birth = row.cells[2].innerText;
+      var gender = row.cells[3].innerText;
+      var num_of_pets = row.cells[5].innerText;
+
+      document.getElementById("id_user").value = id_user;
+      document.getElementById("full_name").value = full_name;
+      document.getElementById("date_of_birth").value = date_of_birth;
+      if (gender === 'Male') {
+        document.getElementById("gender").value = 'Male';
+      } else if (gender === 'Female') {
+        document.getElementById("gender").value = 'Female';
+      } else {
+        document.getElementById("gender").value = 'Other';
+
+      }
+      document.getElementById("num_of_pets").value = num_of_pets;
+
+      document.getElementById("editButton").onclick = function () {
+        Edit(id_user);
+      };
+    }
+
+    async function Edit(key) {
+      const payload = {
+        id_user: key,
+        full_name: document.getElementById("full_name").value,
+        date_of_birth: document.getElementById("date_of_birth").value,
+        gender: document.getElementById("gender").value,
+        num_of_pets: document.getElementById("num_of_pets").value
+      };
+      console.log(key);
+      console.log(payload);
+
+      try {
+        const response = await fetch(`http://localhost:3000/update-owner-user-by-id/${key}`,
+          {
+            method: "PUT",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(`Data update error: ${response.statusText}`);
+        }
+
+        // Chuyển đổi phản hồi thành JSON và hiển thị payload
+        console.log(JSON.stringify(payload));
+
+        Swal.fire("The data has been saved!");
+        RenderItem();
+
+      } catch (error) {
+        console.error(`Error: ${error.message}`);
+        Swal.fire("Error", "Failed to save data. Please try again.", "error");
+      }
+
+    }
+
+    async function deletePostByKey(key) {
+      console.log("Deleting pet owner user with key: " + key);
+
+      try {
+        const result = await Swal.fire({
+          title: `Are you sure to delete the user ${key}?`,
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, delete it!",
+        });
+
+        if (result.isConfirmed) {
+          const url = `http://localhost:3000/remove-owner-user-by-id/${key}`;
+
+          const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json', // Đảm bảo đúng định dạng
+            },
+          });
+
+          console.log('Response status:', response.status);
+
+          if (!response.ok) {
+            const errorMsg = await response.text();
+            throw new Error(`Failed to delete: ${errorMsg}`);
+          }
+
+          const res = await response.json();
+          console.log('Delete response:', res);
+
+          Swal.fire({
+            title: "Deleted!",
+            text: "The user has been deleted.",
+            icon: "success",
+          });
+
+          RenderItem();
+        }
+      } catch (err) {
+        console.error('Error:', err);
+        Swal.fire({
+          title: "Error!",
+          text: error.message,
+          icon: "error",
+        });
+      }
+    }
+
+    async function RenderItem() {
+      const data = await GetData();
+
+      if (!data) {
+        console.error('Cannot get data from API.');
+        return;
+      }
+      str = '';
+      for (i = 0; i < data.length; i++) {
+        const age = calculateAge(data[i].date_of_birth);
+        str += `<tr>
+                    <td>${data[i].id_user}</td>
+                    <td>${data[i].full_name}</td>
+                    <td>${data[i].date_of_birth}</td>
+                    <td>${data[i].gender}</td>
+                    <td>${age}</td>
+                    <td>${data[i].num_of_pets}</td>
+                    <td>
+                      <button class="button-without-background" onclick="editUserToggleForm(this)"><i class="mdi mdi-table-edit"></i></button>
+                      <button class="button-without-background" onclick="deletePostByKey(${data[i].id_user})"><i class="mdi mdi-delete-forever" ></i></button>
+
+                    </td>
+          </tr>`;
+      }
+      document.getElementById("PetOwnerBody").innerHTML = str;
+    }
+    async function GetData() {
+      var url = `http://localhost:3000/get-all-owner-users`;
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+
+        const json = await response.json();
+        return json;
+      } catch (error) {
+        console.error(error.message);
+      }
+      return null;
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- partial:../../partials/_navbar.html -->
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+      <div class="navbar-brand-wrapper d-flex justify-content-center">
+        <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+          <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../images/logo-pet-mini-v2.svg"
+              alt="logo" /></a>
+          <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../images/logo-pet-mini-v2.svg"
+              alt="logo" /></a>
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-sort-variant"></span>
+          </button>
+        </div>
+      </div>
+      <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+        <!-- Search Side -->
+        <ul class="navbar-nav mr-lg-4 w-100">
+          <li class="nav-item nav-search d-none d-lg-block w-100">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="search">
+                  <i class="mdi mdi-magnify"></i>
+                </span>
+              </div>
+              <input type="text" class="form-control" placeholder="Search now" aria-label="search"
+                aria-describedby="search">
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav navbar-nav-right">
+          <!-- Message side -->
+          <li class="nav-item dropdown me-1">
+            <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
+              id="messageDropdown" href="#" data-bs-toggle="dropdown">
+              <i class="mdi mdi-message-text mx-0"></i>
+              <span class="count"></span>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="messageDropdown">
+              <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
+            </div>
+          </li>
+          <!-- Notification side -->
+          <li class="nav-item dropdown me-4">
+            <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center notification-dropdown"
+              id="notificationDropdown" href="#" data-bs-toggle="dropdown">
+              <i class="mdi mdi-bell mx-0"></i>
+              <span class="count"></span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="notificationDropdown">
+              <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+            </div>
+          </li>
+          <!-- Admin menu side -->
+          <li class="nav-item nav-profile dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
+              <img src="../../images/faces/face5.png" alt="profile" />
+              <span class="nav-profile-name">Admin</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+              <a class="dropdown-item">
+                <i class="mdi mdi-settings text-primary"></i>
+                Settings
+              </a>
+              <a class="dropdown-item">
+                <i class="mdi mdi-logout text-primary"></i>
+                Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+          data-toggle="offcanvas">
+          <span class="mdi mdi-menu"></span>
+        </button>
+      </div>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:../../partials/_sidebar.html -->
+      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="../../admin.html">
+              <i class="mdi mdi-home menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
+              aria-controls="ui-basic">
+              <i class="mdi mdi-account menu-icon"></i>
+              <span class="menu-title">User</span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="ui-basic">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="../../pages/tables/User_Table.html">Users</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../../pages/tables/PetOwner_Table.html">Pet Owners</a>
+                </li>
+                <li class="nav-item"> <a class="nav-link"
+                    href="../../pages/tables/Veterinarian_Table.html">Veterinarians</a></li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="../../pages/tables/Pets_Table.html">
+              <i class="mdi mdi-paw menu-icon"></i>
+              <span class="menu-title">Pets</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../../pages/tables/Appointment_Table.html">
+              <i class="mdi mdi-calendar-clock menu-icon"></i>
+              <span class="menu-title">Appointments</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../../pages/tables/Medicine_Table.html">
+              <i class="mdi mdi-hospital menu-icon"></i>
+              <span class="menu-title">Medicine</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../../pages/tables/Vaccine_Table.html">
+              <i class="mdi mdi-needle menu-icon"></i>
+              <span class="menu-title">Vaccine</span>
+            </a>
+          </li>
+
+        </ul>
+      </nav>
+
+      <!-- partial -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <div class="containerTitle">
+                    <div class=" left-alignTitle">
+                      <h3 style="color: rgb(92, 92, 97); font-weight: 700;">Pets Owner Table</h3>
+                    </div>
+                    <div class=" right-alignTitle">
+                      <button type="button" class="btn btn-outline-primary btn-icon-text" onclick="toggleAddUserForm()">
+                        <i class="mdi mdi-playlist-plus"></i>Add
+                      </button>
+                    </div>
+                  </div>
+                  <div class="table-responsive pt-3">
+                    <table class="table table-border table-hover">
+                      <thead>
+                        <tr class="bg-primary text-white">
+                          <th>ID</th>
+                          <th>Full name</th>
+                          <th>DOB</th>
+                          <th>Gender</th>
+                          <th>Age</th>
+                          <th>Number of pets</th>
+                          <th>Action</th>
+
+                        </tr>
+                      </thead>
+                      <tbody id="PetOwnerBody">
+
+                      </tbody>
+                    </table>
+                    <div class="popup-form" id="editUserForm">
+                      <span class="popup-close" onclick="editUserToggleForm()">X</span>
+                      <form>
+                        <h2>Edit Pet Owner User</h2>
+                        <hr class="form-title-line">
+                        <table cellspacing="10px" cellpadding="10px">
+                          <colgroup style="width: 100%;">
+                            <col span="1" style="width: 50%;">
+                            <col span="1" style="width: 50%;">
+                          </colgroup>
+                          <tr>
+                            <input type="hidden" id="id_user" name="id_user">
+
+                            <td>
+                              <label for="full_name">Full Name:</label><br>
+                              <input type="text" id="full_name" name="full_name" required><br>
+                            </td>
+                            <td>
+                              <label for="date_of_birth">Date of birth:</label><br>
+                              <input type="text" id="date_of_birth" name="date_of_birth" required><br>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <label for="gender">Gender</label><br>
+                              <select name="gender" id="gender" style="width: 165px; height: 30px;">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                              </select>
+                            </td>
+
+                            <td>
+                              <label for="num_of_pets">Number of Pets:</label><br>
+                              <input type="text" id="num_of_pets" name="num_of_pets" required><br>
+                            </td>
+                          </tr>
+
+                        </table>
+
+                        <input type="button" id="editButton" value="Edit" onclick="Edit()">
+                      </form>
+                    </div>
+
+                    <div class="popup-form" id="addUserForm">
+                      <span class="popup-close" onclick="toggleAddUserForm()">X</span>
+                      <div class="col-12 grid-margin">
+                        <div class="card">
+                          <div class="card-body">
+                            <h4 class="card-title">Add New Owner Pet User</h4>
+                            <form class="form-sample">
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Username</label>
+                                    <div class="col-sm-9">
+                                      <input type="text" class="form-control" id="new_username" name="new_username" />
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Full Name</label>
+                                    <div class="col-sm-9">
+                                      <input type="text" class="form-control" id="new_fullName" name="new_fullName" />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Email</label>
+                                    <div class="col-sm-9">
+                                      <input type="text" class="form-control" id="new_email" name="new_email" />
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Phone Number</label>
+                                    <div class="col-sm-9">
+                                      <input type="text" class="form-control" id="new_phoneNum" name="new_phoneNum" />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Gender</label>
+                                    <div class="col-sm-9">
+                                      <select name="new_gender" id="new_gender" class="form-control">
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Date of Birth</label>
+                                    <div class="col-sm-9">
+                                      <input class="form-control" id="new_dob" name="new_dob"
+                                        placeholder="dd/mm/yyyy" />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Number Of Pet</label>
+                                    <div class="col-sm-9">
+                                      <input type="text" class="form-control" id="new_numOfPet" name="new_numOfPet" />
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Password</label>
+                                    <div class="col-sm-9">
+                                      <input type="text" class="form-control" id="new_password" name="new_password" />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <button type="button" class="btn btn-outline-primary btn-icon-text" onclick="addUser()">
+                                  <i class="mdi mdi-file-check btn-icon-prepend"></i>
+                                  Submit
+                                </button>
+                              </div>
+
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      <form>
+                        <h2>Add New Pet Owner User</h2>
+                        <hr class="form-title-line">
+                        <table cellspacing="10px" cellpadding="10px">
+                          <colgroup style="width: 100%;">
+                            <col span="1" style="width: 50%;">
+                            <col span="1" style="width: 50%;">
+                          </colgroup>
+                          <tr>
+                            <td>
+                              <label for="new_id_user">ID:</label><br>
+                              <input type="text" id="new_id_user" name="new_id_user">
+                            </td>
+                            <td>
+                              <label for="new_full_name">Full Name:</label><br>
+                              <input type="text" id="new_full_name" name="new_full_name" required><br>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <label for="new_date_of_birth">Date of birth:</label><br>
+                              <input type="text" id="new_date_of_birth" name="new_date_of_birth" required><br>
+                            </td>
+
+                            <td>
+                              <label for="new_gender">Gender</label><br>
+                              <select name="new_gender" id="new_gender" style="width: 165px; height: 30px;">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                              </select>
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td>
+                              <label for="new_num_of_pets">Number of Pets:</label><br>
+                              <input type="text" id="new_num_of_pets" name="new_num_of_pets" required><br>
+                            </td>
+                          </tr>
+
+                        </table>
+
+                        <input type="button" value="Add User" onclick="addUser()">
+                      </form>
+                    </div>
+
+                    <script>
+                      RenderItem(); 
+                    </script>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <footer class="footer">
+          <div class="d-sm-flex justify-content-center justify-content-sm-between">
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © <a
+                href="https://www.bootstrapdash.com/" target="_blank">bootstrapdash.com </a>2021</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Only the best <a
+                href="https://www.bootstrapdash.com/" target="_blank"> Bootstrap dashboard </a> templates</span>
+          </div>
+        </footer>
+        <!-- partial -->
+      </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+  <!-- container-scroller -->
+  <!-- plugins:js -->
+  <script src="../../vendors/base/vendor.bundle.base.js"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="../../js/off-canvas.js"></script>
+  <script src="../../js/hoverable-collapse.js"></script>
+  <script src="../../js/template.js"></script>
+  <!-- endinject -->
+  <!-- Custom js for this page-->
+  <!-- End custom js for this page-->
+</body>
+
+</html>

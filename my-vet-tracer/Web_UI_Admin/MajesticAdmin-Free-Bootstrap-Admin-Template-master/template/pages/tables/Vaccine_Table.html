@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Veterinary Tracker</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../vendors/base/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="../../images/favicon.png" />
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        i {
+            color: #07476a;
+            font-size: 20px;
+        }
+
+        .containerTitle {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .left-alignTitle {
+            text-align: left;
+        }
+
+        .right-alignTitle {
+            text-align: right;
+        }
+
+        .table-title {
+            padding-bottom: 10px;
+            margin: 0 0 10px;
+        }
+
+        .table-title h2 {
+            margin: 6px 0 0;
+            font-size: 22px;
+        }
+
+        .table-title .add-new {
+            float: right;
+            height: 30px;
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: none;
+            min-width: 100px;
+            border-radius: 50px;
+            line-height: 13px;
+        }
+
+        .table-title .add-new i {
+            margin-right: 4px;
+        }
+
+        table.table {
+            table-layout: fixed;
+        }
+
+        table.table tr th,
+        table.table tr td {
+            border-color: #e9e9e9;
+        }
+
+        table.table th i {
+            font-size: 13px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        table.table th:last-child {
+            width: 100px;
+        }
+
+        table.table td a {
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 5px;
+            min-width: 24px;
+        }
+
+        table.table td a.add {
+            color: #27C46B;
+        }
+
+        table.table td a.edit {
+            color: #FFC107;
+        }
+
+        table.table td a.delete {
+            color: #E34724;
+        }
+
+        table.table td i {
+            font-size: 19px;
+        }
+
+        table.table td a.add i {
+            font-size: 24px;
+            margin-right: -1px;
+            position: relative;
+            top: 3px;
+        }
+
+        table.table .form-control {
+            height: 32px;
+            line-height: 32px;
+            box-shadow: none;
+            border-radius: 2px;
+        }
+
+        table.table .form-control.error {
+            border-color: #f50000;
+        }
+
+        table.table td .add {
+            display: none;
+        }
+
+        .popup-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0f0f0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+        }
+
+        .popup-form input[type="text"],
+        .popup-form input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .popup-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .popup-form input[type="button"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .popup-close {
+            float: right;
+            cursor: pointer;
+        }
+
+        .button-without-background {
+            background-color: transparent;
+            /* Set background color to transparent */
+            border: none;
+            /* Remove border */
+            padding: 0;
+            /* Remove padding */
+            /* Additional styles as needed */
+        }
+    </style>
+    <!-- fetch api -->
+    <script>
+        // Function to add a new vaccine
+        async function AddVaccine() {
+            const payload = {
+                vac_name: document.getElementById("new_vac_name").value,
+                date: document.getElementById("new_date").value,
+                dose: document.getElementById("new_dose").value,
+                total: parseFloat(document.getElementById("new_total").value),
+                pet_id: parseInt(document.getElementById("new_pet_id").value),
+                veterinarian_id: parseInt(document.getElementById("new_veterinarian_id").value)
+            };
+
+            try {
+                const response = await fetch(`http://localhost:3000/add-vaccine`, {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                Swal.fire("New vaccine has been added!");
+                RenderVaccines();
+            } catch (error) {
+                console.error(`Error: ${error.message}`);
+                Swal.fire("Error", "Failed to add data. Please try again.", "error");
+            }
+        }
+
+        function addVaccineToggleForm() {
+            var form = document.getElementById('addVaccineForm');
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function editVaccineToggleForm(button) {
+            var form = document.getElementById('editVaccineForm');
+
+            if (form.style.display === 'block') {
+                form.style.display = 'none';
+                return;
+            } else {
+                form.style.display = 'block';
+            }
+
+            var row = button.parentNode.parentNode;
+            var id_vac = row.cells[0].innerText;
+            var vac_name = row.cells[1].innerText;
+            var date = row.cells[2].innerText;
+            var dose = row.cells[3].innerText;
+            var total = row.cells[4].innerText;
+            var pet_id = row.cells[5].innerText;
+            var veterinarian_id = row.cells[6].innerText;
+
+            document.getElementById("id_vac").value = id_vac;
+            document.getElementById("vac_name").value = vac_name;
+            document.getElementById("date").value = date;
+            document.getElementById("dose").value = dose;
+            document.getElementById("total").value = total;
+            document.getElementById("pet_id").value = pet_id;
+            document.getElementById("veterinarian_id").value = veterinarian_id;
+
+            document.getElementById("editButton").onclick = function () {
+                EditVaccine(id_vac);
+            };
+        }
+
+        async function EditVaccine(key) {
+            const payload = {
+                id_vac: key,
+                vac_name: document.getElementById("vac_name").value,
+                date: document.getElementById("date").value,
+                dose: document.getElementById("dose").value,
+                total: parseFloat(document.getElementById("total").value),
+                pet_id: parseInt(document.getElementById("pet_id").value),
+                veterinarian_id: parseInt(document.getElementById("veterinarian_id").value)
+            };
+
+            try {
+                const response = await fetch(`http://localhost:3000/update-vaccine-by-id/${key}`, {
+                    method: "PUT",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Data update error: ${response.statusText}`);
+                }
+
+                Swal.fire("The data has been saved!");
+                RenderVaccines();
+
+            } catch (error) {
+                console.error(`Error: ${error.message}`);
+                Swal.fire("Error", "Failed to save data. Please try again.", "error");
+            }
+        }
+
+        async function deletePostByKey(key) {
+            console.log("Deleting vaccine with key: " + key);
+
+            try {
+                const result = await Swal.fire({
+                    title: `Are you sure to delete the vaccine ${key}?`,
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!",
+                });
+
+                if (result.isConfirmed) {
+                    const url = `http://localhost:3000/remove-vaccine-by-id/${key}`;
+
+                    const response = await fetch(url, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                    });
+
+                    if (!response.ok) {
+                        const errorMsg = await response.text();
+                        throw new Error(`Failed to delete: ${errorMsg}`);
+                    }
+
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "The data has been deleted.",
+                        icon: "success",
+                    });
+
+                    await RenderVaccines();
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                Swal.fire({
+                    title: "Error!",
+                    text: err.message,
+                    icon: "error",
+                });
+            }
+        }
+
+        async function RenderVaccines() {
+            const data = await GetVaccineData();
+
+            if (!data) {
+                console.error('Cannot get data from API.');
+                return;
+            }
+            let str = '';
+            for (let i = 0; i < data.length; i++) {
+                str += `<tr>
+                    <td>${data[i].id_vac}</td>
+                    <td>${data[i].vac_name}</td>
+                    <td>${data[i].date}</td>
+                    <td>${data[i].dose}</td>
+                    <td>${data[i].total}</td>
+                    <td>${data[i].pet_id}</td>
+                    <td>${data[i].veterinarian_id}</td>
+                    
+                    <td>
+                        <button class="button-without-background" onclick="editVaccineToggleForm(this)"><i class="mdi mdi-table-edit"></i></button>
+                        <button class="button-without-background" onclick="deletePostByKey(${data[i].id_vac})"><i class="mdi mdi-delete-forever"></i></button>
+                    </td>
+                </tr>`;
+            }
+            document.getElementById("VaccineBody").innerHTML = str;
+        }
+
+        async function GetVaccineData() {
+            const url = 'http://localhost:3000/get-all-vaccine';
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const json = await response.json();
+                return json;
+
+            } catch (error) {
+                console.error(error.message);
+            }
+            return null;
+        }
+    </script>
+
+
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_navbar.html -->
+        <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="navbar-brand-wrapper d-flex justify-content-center">
+                <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+                    <a class="navbar-brand brand-logo" href="../../index.html"><img
+                            src="../../images/logo-pet-mini-v2.svg" alt="logo" /></a>
+                    <a class="navbar-brand brand-logo-mini" href="../../index.html"><img
+                            src="../../images/logo-pet-mini-v2.svg" alt="logo" /></a>
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button"
+                        data-toggle="minimize">
+                        <span class="mdi mdi-sort-variant"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                <!-- Search Side -->
+                <ul class="navbar-nav mr-lg-4 w-100">
+                    <li class="nav-item nav-search d-none d-lg-block w-100">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="search">
+                                    <i class="mdi mdi-magnify"></i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search now" aria-label="search"
+                                aria-describedby="search">
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav navbar-nav-right">
+                    <!-- Message side -->
+                    <li class="nav-item dropdown me-1">
+                        <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
+                            id="messageDropdown" href="#" data-bs-toggle="dropdown">
+                            <i class="mdi mdi-message-text mx-0"></i>
+                            <span class="count"></span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                            aria-labelledby="messageDropdown">
+                            <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
+                        </div>
+                    </li>
+                    <!-- Notification side -->
+                    <li class="nav-item dropdown me-4">
+                        <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center notification-dropdown"
+                            id="notificationDropdown" href="#" data-bs-toggle="dropdown">
+                            <i class="mdi mdi-bell mx-0"></i>
+                            <span class="count"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                            aria-labelledby="notificationDropdown">
+                            <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                        </div>
+                    </li>
+                    <!-- Admin menu side -->
+                    <li class="nav-item nav-profile dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
+                            <img src="../../images/faces/face5.png" alt="profile" />
+                            <span class="nav-profile-name">Admin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                            aria-labelledby="profileDropdown">
+                            <a class="dropdown-item">
+                                <i class="mdi mdi-settings text-primary"></i>
+                                Settings
+                            </a>
+                            <a class="dropdown-item">
+                                <i class="mdi mdi-logout text-primary"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:../../partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../admin.html">
+                            <i class="mdi mdi-home menu-icon"></i>
+                            <span class="menu-title">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                            aria-controls="ui-basic">
+                            <i class="mdi mdi-account menu-icon"></i>
+                            <span class="menu-title">User</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="ui-basic">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"> <a class="nav-link"
+                                        href="../../pages/tables/User_Table.html">Users</a></li>
+                                <li class="nav-item"> <a class="nav-link"
+                                        href="../../pages/tables/PetOwner_Table.html">Pet Owners</a></li>
+                                <li class="nav-item"> <a class="nav-link"
+                                        href="../../pages/tables/Veterinarian_Table.html">Veterinarians</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/tables/Pets_Table.html">
+                            <i class="mdi mdi-paw menu-icon"></i>
+                            <span class="menu-title">Pets</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/tables/Appointment_Table.html">
+                            <i class="mdi mdi-calendar-clock menu-icon"></i>
+                            <span class="menu-title">Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/tables/Medicine_Table.html">
+                            <i class="mdi mdi-hospital menu-icon"></i>
+                            <span class="menu-title">Medicine</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/tables/Vaccine_Table.html">
+                            <i class="mdi mdi-needle menu-icon"></i>
+                            <span class="menu-title">Vaccine</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="containerTitle">
+                                        <div class=" left-alignTitle">
+                                            <h3 style="color: rgb(92, 92, 97); font-weight: 700;">Vaccine Table</h3>
+                                        </div>
+                                        <div class=" right-alignTitle">
+                                            <button type="button" class="btn btn-outline-primary btn-icon-text"
+                                                onclick="addVaccineToggleForm()">
+                                                <i class="mdi mdi-playlist-plus"></i>Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive pt-3">
+                                        <table class="table table-border table-hover">
+                                            <thead>
+                                                <tr class="bg-primary text-white">
+                                                    <th>ID</th>
+                                                    <th>Vaccine</th>
+                                                    <th>Date</th>
+                                                    <th>Dose</th>
+                                                    <th>Total</th>
+                                                    <th>Pet ID</th>
+                                                    <th>Veterinarian ID</th>
+                                                    <th>Action</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody id="VaccineBody">
+
+                                            </tbody>
+                                        </table>
+                                        <div class="popup-form" id="editVaccineForm">
+                                            <span class="popup-close" onclick="editVaccineToggleForm()">X</span>
+                                            <form>
+                                                <h2>Edit Vaccine Information</h2>
+                                                <hr class="form-title-line">
+                                                <table cellspacing="10px" cellpadding="10px">
+                                                    <colgroup style="width: 100%;">
+                                                        <col span="1" style="width: 50%;">
+                                                        <col span="1" style="width: 50%;">
+                                                    </colgroup>
+                                                    <tr>
+                                                        <input type="hidden" id="id_vac" name="id_vac">
+                                                        <td>
+                                                            <label for="vac_name">Vaccine Name:</label><br>
+                                                            <input type="text" id="vac_name" name="vac_name"
+                                                                required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="date">Date:</label><br>
+                                                            <input type="text" id="date" name="date" required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="dose">Dose:</label><br>
+                                                            <input type="text" id="dose" name="dose" required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="total">Total:</label><br>
+                                                            <input type="text" id="total" name="total" required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="pet_id">Pet ID:</label><br>
+                                                            <input type="text" id="pet_id" name="pet_id" required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="veterinarian_id">Veterinarian
+                                                                ID:</label><br>
+                                                            <input type="text" id="veterinarian_id"
+                                                                name="veterinarian_id" required><br>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <input type="button" id="editButton" value="Edit"
+                                                    onclick="EditVaccine()">
+                                            </form>
+                                        </div>
+
+                                        <!-- Add Vaccine Form -->
+                                        <div class="popup-form" id="addVaccineForm">
+                                            <span class="popup-close" onclick="addVaccineToggleForm()">X</span>
+                                            <form>
+                                                <h2>Add Vaccine</h2>
+                                                <hr class="form-title-line">
+                                                <table cellspacing="10px" cellpadding="10px">
+                                                    <colgroup style="width: 100%;">
+                                                        <col span="1" style="width: 50%;">
+                                                        <col span="1" style="width: 50%;">
+                                                    </colgroup>
+                                                    <tr>
+                                                        <input type="hidden" id="new_id_vac" name="new_id_vac">
+                                                        <td>
+                                                            <label for="new_vac_name">Vaccine Name:</label><br>
+                                                            <input type="text" id="new_vac_name" name="new_vac_name"
+                                                                required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="new_date">Date:</label><br>
+                                                            <input type="text" id="new_date" name="new_date"
+                                                                required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="new_dose">Dose:</label><br>
+                                                            <input type="text" id="new_dose" name="new_dose"
+                                                                required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="new_total">Total:</label><br>
+                                                            <input type="text" id="new_total" name="new_total"
+                                                                required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="new_pet_id">Pet ID:</label><br>
+                                                            <input type="text" id="new_pet_id" name="new_pet_id"
+                                                                required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="new_veterinarian_id">Veterinarian
+                                                                ID:</label><br>
+                                                            <input type="text" id="new_veterinarian_id"
+                                                                name="new_veterinarian_id" required><br>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <input type="button" id="addButton" value="Add" onclick="AddVaccine()">
+                                            </form>
+                                        </div>
+
+
+                                        <script>
+                                            RenderVaccines();
+
+                                        </script>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:../../partials/_footer.html -->
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © <a
+                                href="https://www.bootstrapdash.com/" target="_blank">bootstrapdash.com </a>2021</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Only the best
+                            templates</span>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="../../vendors/base/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page-->
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="../../js/off-canvas.js"></script>
+    <script src="../../js/hoverable-collapse.js"></script>
+    <script src="../../js/template.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <!-- End custom js for this page-->
+</body>
+
+</html>
