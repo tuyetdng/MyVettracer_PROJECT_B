@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,14 +30,24 @@ public class OwnerUserController {
         return apiResponse;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getownerusers")
-    List<OwnerUser> getUsers() {
+    List<OwnerUserResponse> getUsers() {
+
         return userService.getUsers();
     }
 
     @GetMapping("/getownerusers/{user_id}")
     OwnerUserResponse getUsers(@PathVariable int user_id) {
+
         return userService.getUsers(user_id);
+    }
+
+    @GetMapping("/myinfo")
+    APIResponse<OwnerUserResponse> getMyInfo() {
+        return APIResponse.<OwnerUserResponse>builder()
+                .result(userService.getMyInfo())
+                .build();
     }
 
     @PutMapping("/updateowneruser/{user_id}")

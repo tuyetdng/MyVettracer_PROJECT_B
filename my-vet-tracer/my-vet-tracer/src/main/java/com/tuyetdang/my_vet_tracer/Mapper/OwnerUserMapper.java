@@ -15,5 +15,7 @@ public interface OwnerUserMapper {
 
     @Mapping(source = "idOwnerUser", target = "idOwnerUser")
     OwnerUserResponse toUserResponse(OwnerUser user);
+
+    @Mapping(target = "roles", ignore = true)
     void updateUser(@MappingTarget OwnerUser user, UpdateSystemOwnerUserRequest request);
 }

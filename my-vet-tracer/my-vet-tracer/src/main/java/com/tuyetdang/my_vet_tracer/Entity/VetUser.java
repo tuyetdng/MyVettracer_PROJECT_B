@@ -8,8 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
@@ -33,6 +32,9 @@ public class VetUser {
     String experience;
     Integer authentication;
 
+    @ManyToMany
+    Set<Role> roles;
+
     @OneToMany(mappedBy = "vetUser", cascade = CascadeType.ALL)
     @JsonIgnore
     List<Pet> pets = new ArrayList<>();
@@ -48,4 +50,5 @@ public class VetUser {
     @OneToMany(mappedBy = "vetUser", cascade = CascadeType.ALL)
     @JsonIgnore
     List<Appointment> appointments = new ArrayList<>();
+
 }

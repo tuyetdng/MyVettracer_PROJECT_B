@@ -28,9 +28,11 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 import com.tuyetdang.my_vet_tracer.Entity.OwnerUser;
 import com.tuyetdang.my_vet_tracer.Entity.VetUser;
+import org.springframework.util.CollectionUtils;
 
 
 @Slf4j
@@ -44,6 +46,7 @@ public class AuthenticationService {
     protected String SIGNER_KEY;
     OwnerUserRepository ownerUserRepository;
     VetUserRepository vetUserRepository;
+    PasswordEncoder passwordEncoder;
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
 //        var user = ownerUserRepository.findByUserName(request.getUserName())
@@ -56,7 +59,6 @@ public class AuthenticationService {
                 .map(user -> (Object) user)
                 .or(() -> vetUserRepository.findByUserName(request.getUserName()).map(user -> (Object) user));
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
         boolean authenticated;
 
@@ -73,7 +75,7 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
-        var token = generateToken(request.getUserName());
+        var token = generateToken(foundUser.get());
 
         return AuthenticationResponse.builder()
                 .token(token)
@@ -82,8 +84,18 @@ public class AuthenticationService {
 
     }
 
-    private String generateToken(String username) {
+    private String generateToken(Object user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);   //Algorithm secure header
+        String scope = "";
+        String username = "";
+
+        if (user instanceof OwnerUser ownerUser) {
+            username = ownerUser.getUserName();
+            scope = buildScope(ownerUser);
+        } else if (user instanceof VetUser vetUser) {
+            username = vetUser.getUserName();
+            scope = buildScope(vetUser);
+        }
 
         //Data in body
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
@@ -93,7 +105,7 @@ public class AuthenticationService {
                 .expirationTime(new Date(
                         Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
                 ))
-                .claim("customClaim", "custom")
+                .claim("scope", scope)
                 .build();
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
 
@@ -107,7 +119,34 @@ public class AuthenticationService {
             throw new RuntimeException(e);
         }
     }
+    private String buildScope(Object user) {
+        StringJoiner stringJoiner = new StringJoiner(" ");
 
+        if (user instanceof OwnerUser ownerUser) {
+            if (!CollectionUtils.isEmpty(ownerUser.getRoles())) {
+                ownerUser.getRoles().forEach(role -> {
+                    stringJoiner.add("ROLE_" + role.getName());
+                    if (!CollectionUtils.isEmpty(role.getPermissions())) {
+                        role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+                    }
+                });
+            }
+        } else {
+            VetUser vetUser = (VetUser) user;
+            if (!CollectionUtils.isEmpty(vetUser.getRoles())) {
+                vetUser.getRoles().forEach(role -> {
+                    stringJoiner.add("ROLE_" + role.getName());
+                    if (!CollectionUtils.isEmpty(role.getPermissions())) {
+                        role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+                    }
+                });
+            }
+        }
+
+        System.out.println("roles check: " + stringJoiner.toString());
+
+        return stringJoiner.toString();
+    }
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
 

@@ -2,18 +2,15 @@ package com.tuyetdang.my_vet_tracer.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class OwnerUser {
@@ -32,4 +29,8 @@ public class OwnerUser {
     @OneToMany(mappedBy = "ownerUser", cascade = CascadeType.ALL)
     @JsonIgnore
     List<Pet> pets = new ArrayList<>();
+
+    @ManyToMany
+    Set<Role> roles;
+
 }

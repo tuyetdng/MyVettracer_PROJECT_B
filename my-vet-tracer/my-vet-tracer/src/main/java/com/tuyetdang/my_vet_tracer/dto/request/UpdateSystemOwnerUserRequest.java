@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,4 +20,5 @@ public class UpdateSystemOwnerUserRequest {
     String dob;
     String gender;
     Integer numOfPet;
+    List<String> roles;
 }

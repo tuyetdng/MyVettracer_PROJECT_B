@@ -3,6 +3,8 @@ package com.tuyetdang.my_vet_tracer.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,7 +15,7 @@ public class VetUserResponse {
     String userName;
     String email;
     String phoneNum;
-    String password;
+//    String password;
     String fullName;
     String dob;
     String gender;
@@ -22,4 +24,6 @@ public class VetUserResponse {
     String qualification;
     String experience;
     Integer authentication;
+    Set<RoleResponse> roles;
+
 }
