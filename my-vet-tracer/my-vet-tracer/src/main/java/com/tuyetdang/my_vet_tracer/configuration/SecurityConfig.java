@@ -35,8 +35,8 @@ public class SecurityConfig {
                 request.requestMatchers(HttpMethod.POST, PUBLIC_AUTH_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
                         .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
-                        .requestMatchers(HttpMethod.GET, PRIVATE_AUTH_ENDPOINTS)
-                        .hasAuthority("ROLE_" + Role.ADMIN.name())
+//                        .requestMatchers(HttpMethod.GET, PRIVATE_AUTH_ENDPOINTS)
+//                        .hasAuthority("ROLE_" + Role.ADMIN.name())
                         .anyRequest()
                         .authenticated());
         System.out.println(Role.ADMIN.name());
