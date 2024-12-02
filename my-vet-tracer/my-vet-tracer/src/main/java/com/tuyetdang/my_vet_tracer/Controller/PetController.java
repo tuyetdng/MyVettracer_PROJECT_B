@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
+@RequestMapping("/pet")
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)       //remove @Autowire
-@RequestMapping("/pet")
 public class PetController {
     PetService petService;
 
-    @PostMapping("/addpet")
+    @PostMapping()
     APIResponse<Pet> createPet(@RequestBody @Valid CreatePetRequest request) {
         APIResponse<Pet> apiResponse = new APIResponse<>();
         apiResponse.setResult(petService.createPet(request));
@@ -34,22 +34,23 @@ public class PetController {
 //        return petService.getPets();
 //    }
 
-    @GetMapping("/getpets/{pet_id}")
+    @GetMapping("/{pet_id}")
     PetResponse getPets(@PathVariable int pet_id) {
         return petService.getPets(pet_id);
     }
 
-    @GetMapping("/getpets")
+    @GetMapping()
     public List<PetResponse> getPets() {
         return petService.getPets();
     }
 
-    @PutMapping("/updatepet/{pet_id}")
+    @PutMapping("/{pet_id}")
     PetResponse updateUser(@PathVariable Integer pet_id, @RequestBody @Valid UpdatePetRequest request) {
         return petService.updatePet(pet_id, request);
     }
 
-    @DeleteMapping("/deletepet/{pet_id}")
+    //    @DeleteMapping("/deletepet/{pet_id}")
+    @DeleteMapping("/{pet_id}")
     String deleteUser(@PathVariable Integer pet_id) {
         petService.deletePet(pet_id);
         return "Pet deleted";

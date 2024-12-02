@@ -64,7 +64,7 @@ public class OwnerUserService {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
-    @PostAuthorize("returnObject.userName == authentication.name")
+    @PreAuthorize("hasRole('ADMIN')")
     public OwnerUserResponse getUsers(Integer Id) {
         return userMapper.toUserResponse(userRepository.findById(Id)
                 .orElseThrow(() -> new RuntimeException("Owner User not found")));
@@ -79,12 +79,13 @@ public class OwnerUserService {
         return userMapper.toUserResponse(user);
     }
 
+//    @PostAuthorize("returnObject.userName == authentication.name")
     public OwnerUserResponse updateUser(Integer user_id, UpdateSystemOwnerUserRequest request) {
         OwnerUser user = userRepository.findById(user_id)
                 .orElseThrow(() -> new RuntimeException("Owner User not found"));
         userMapper.updateUser(user, request);
 
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+//        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         var roles = roleRepository.findAllById(request.getRoles());
         user.setRoles(new HashSet<>(roles));
@@ -94,6 +95,7 @@ public class OwnerUserService {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(Integer user_id) {
         userRepository.deleteById(user_id);
     }

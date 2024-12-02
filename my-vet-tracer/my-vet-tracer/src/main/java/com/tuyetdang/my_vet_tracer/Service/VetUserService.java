@@ -61,7 +61,7 @@ public class VetUserService {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
-    @PostAuthorize("returnObject.userName == authentication.name")
+    @PreAuthorize("hasRole('ADMIN')")
     public VetUserResponse getUsers(Integer Id) {
         return userMapper.toUserResponse(userRepository.findById(Id)
                 .orElseThrow(() -> new RuntimeException("Veterinarian User not found")));
@@ -76,18 +76,20 @@ public class VetUserService {
         return userMapper.toUserResponse(user);
     }
 
+//    @PostAuthorize("returnObject.userName == authentication.name")
     public VetUserResponse updateUser(Integer user_id, UpdateSystemVetUserRequest request) {
         VetUser user = userRepository.findById(user_id)
                 .orElseThrow(() -> new RuntimeException("Veterinarian User not found"));
         userMapper.updateUser(user, request);
 
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
+//        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         var roles = roleRepository.findAllById(request.getRoles());
         user.setRoles(new HashSet<>(roles));
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(Integer user_id) {
         userRepository.deleteById(user_id);
     }

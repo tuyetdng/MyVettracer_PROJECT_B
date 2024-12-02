@@ -23,7 +23,7 @@ import java.util.List;
 public class OwnerUserController {
     OwnerUserService userService;
 
-    @PostMapping("/addowneruser")
+    @PostMapping()
     APIResponse<OwnerUser> createUser(@RequestBody @Valid CreaterSystemOwnerUserRequest request) {
         APIResponse<OwnerUser> apiResponse = new APIResponse<>();
         apiResponse.setResult(userService.createUser(request));
@@ -31,13 +31,13 @@ public class OwnerUserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/getownerusers")
+    @GetMapping()
     List<OwnerUserResponse> getUsers() {
 
         return userService.getUsers();
     }
 
-    @GetMapping("/getownerusers/{user_id}")
+    @GetMapping("/{user_id}")
     OwnerUserResponse getUsers(@PathVariable int user_id) {
 
         return userService.getUsers(user_id);
@@ -50,12 +50,12 @@ public class OwnerUserController {
                 .build();
     }
 
-    @PutMapping("/updateowneruser/{user_id}")
+    @PutMapping("/{user_id}")
     OwnerUserResponse updateUser(@PathVariable Integer user_id, @RequestBody @Valid UpdateSystemOwnerUserRequest request) {
         return userService.updateUser(user_id, request);
     }
 
-    @DeleteMapping("/deleteowneruser/{user_id}")
+    @DeleteMapping("/{user_id}")
     String deleteUser(@PathVariable Integer user_id) {
         userService.deleteUser(user_id);
         return "User deleted";

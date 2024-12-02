@@ -22,29 +22,29 @@ import java.util.List;
 public class AppointmentController {
     AppointmentService appointmentService;
 
-    @PostMapping("/addappointment")
+    @PostMapping()
     APIResponse<Appointment> createAppointment(@RequestBody @Valid CreateAppointmentRequest request) {
         APIResponse<Appointment> apiResponse = new APIResponse<>();
         apiResponse.setResult(appointmentService.createAppointment(request));
         return apiResponse;
     }
 
-    @GetMapping("/getappointments/{app_id}")
+    @GetMapping("/{app_id}")
     AppointmentResponse getAppointments(@PathVariable int app_id) {
         return appointmentService.getAppointments(app_id);
     }
 
-    @GetMapping("/getappointments")
+    @GetMapping()
     public List<AppointmentResponse> getAppointments() {
         return appointmentService.getAppointments();
     }
 
-    @PutMapping("/updateappointment/{app_id}")
+    @PutMapping("/{app_id}")
     AppointmentResponse updateAppointment(@PathVariable Integer app_id, @RequestBody @Valid UpdateAppointmentRequest request) {
         return appointmentService.updateAppointment(app_id, request);
     }
 
-    @DeleteMapping("/deleteappointment/{app_id}")
+    @DeleteMapping("/{app_id}")
     String deleteAppointment(@PathVariable Integer app_id) {
         appointmentService.deleteAppointment(app_id);
         return "Appointment deleted";

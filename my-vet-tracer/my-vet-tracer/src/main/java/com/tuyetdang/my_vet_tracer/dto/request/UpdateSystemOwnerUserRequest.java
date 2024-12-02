@@ -1,5 +1,6 @@
 package com.tuyetdang.my_vet_tracer.dto.request;
 
+//import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,8 +15,9 @@ import java.util.List;
 public class UpdateSystemOwnerUserRequest {
     String email;
     String phoneNum;
-    @Size(min = 5, max = 20, message = "PASSWORD_INVALID")
-    String password;
+//    @Nullable
+//    @Size(min = 5, max = 20, message = "PASSWORD_INVALID")
+//    String password;
     String fullName;
     String dob;
     String gender;

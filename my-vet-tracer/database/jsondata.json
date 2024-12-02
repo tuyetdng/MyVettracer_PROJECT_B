@@ -1,0 +1,1366 @@
+-- Owner:
+[
+    {
+        "userName": "john_doe",
+        "email": "john.doe@example.com",
+        "phoneNum": "123-456-7890",
+        "password": "password123",
+        "fullName": "John Doe",
+        "dob": "1980-01-15",
+        "gender": "Male",
+        "numOfPet": 2
+    },
+    {
+        "userName": "alice_johnson",
+        "email": "alice.johnson@example.com",
+        "phoneNum": "345-678-9012",
+        "password": "password789",
+        "fullName": "Alice Johnson",
+        "dob": "1975-05-22",
+        "gender": "Female",
+        "numOfPet": 1
+    },
+    {
+        "userName": "carol_davis",
+        "email": "carol.davis@example.com",
+        "phoneNum": "567-890-1234",
+        "password": "password345",
+        "fullName": "Carol Davis",
+        "dob": "1990-07-30",
+        "gender": "Female",
+        "numOfPet": 2
+    },
+    {
+        "userName": "eve_lee",
+        "email": "eve.lee@example.com",
+        "phoneNum": "789-012-3456",
+        "password": "password901",
+        "fullName": "Eve Lee",
+        "dob": "1988-12-09",
+        "gender": "Female",
+        "numOfPet": 2
+    },
+    {
+        "userName": "iris_moore",
+        "email": "iris.moore@example.com",
+        "phoneNum": "123-456-7891",
+        "password": "password1234",
+        "fullName": "Iris Moore",
+        "dob": "1995-04-25",
+        "gender": "Female",
+        "numOfPet": 1
+    },
+    {
+        "userName": "karen_jones",
+        "email": "karen.jones@example.com",
+        "phoneNum": "345-678-9013",
+        "password": "password9101",
+        "fullName": "Karen Jones",
+        "dob": "1983-06-17",
+        "gender": "Female",
+        "numOfPet": 2
+    },
+    {
+        "userName": "mia_harris",
+        "email": "mia.harris@example.com",
+        "phoneNum": "567-890-1235",
+        "password": "password3344",
+        "fullName": "Mia Harris",
+        "dob": "1991-08-14",
+        "gender": "Female",
+        "numOfPet": 1
+    },
+    {
+        "userName": "olivia_davis",
+        "email": "olivia.davis@example.com",
+        "phoneNum": "789-012-3457",
+        "password": "password7788",
+        "fullName": "Olivia Davis",
+        "dob": "1989-11-30",
+        "gender": "Female",
+        "numOfPet": 3
+    },
+    {
+        "userName": "quinn_martinez",
+        "email": "quinn.martinez@example.com",
+        "phoneNum": "901-234-5679",
+        "password": "password2233",
+        "fullName": "Quinn Martinez",
+        "dob": "1992-02-28",
+        "gender": "Male",
+        "numOfPet": 2
+    },
+    {
+        "userName": "alice_hanimore",
+        "email": "alice.hanimore@example.com",
+        "phoneNum": "911-244-7679",
+        "password": "123456789",
+        "fullName": "Hanimore Alice",
+        "dob": "1990-12-23",
+        "gender": "Female",
+        "numOfPet": 3
+    },
+    {
+        "userName": "george_smith",
+        "email": "george.smith@example.com",
+        "phoneNum": "101-234-5670",
+        "password": "password1122",
+        "fullName": "George Smith",
+        "dob": "1985-03-12",
+        "gender": "Male",
+        "numOfPet": 1
+    },
+    {
+        "userName": "linda_wilson",
+        "email": "linda.wilson@example.com",
+        "phoneNum": "202-345-6781",
+        "password": "password2233",
+        "fullName": "Linda Wilson",
+        "dob": "1978-09-05",
+        "gender": "Female",
+        "numOfPet": 1
+    },
+    {
+        "userName": "steven_martin",
+        "email": "steven.martin@example.com",
+        "phoneNum": "303-456-7892",
+        "password": "password3344",
+        "fullName": "Steven Martin",
+        "dob": "1993-07-22",
+        "gender": "Male",
+        "numOfPet": 1
+    },
+    {
+        "userName": "nancy_clark",
+        "email": "nancy.clark@example.com",
+        "phoneNum": "404-567-8903",
+        "password": "password4455",
+        "fullName": "Nancy Clark",
+        "dob": "1980-11-30",
+        "gender": "Female",
+        "numOfPet": 4
+    },
+	{
+        "userName": "lucy_android",
+        "email": "lucyandroid@gmail.com",
+        "phoneNum": "855-524-5442",
+        "password": "246810",
+        "fullName": "Lucy Android",
+        "dob": "2000-09-09",
+        "gender": "Female",
+        "numOfPet": 1
+    }
+ 
+]
+
+
+-- Vet
+[
+    {
+        "userName": "jane_smith",
+        "email": "jane.smith@example.com",
+        "phoneNum": "234-567-8901",
+        "password": "password456",
+        "fullName": "Jane Smith",
+        "dob": "1988-02-28",
+        "gender": "Female",
+        "nameOfConsultingRoom": "Green Valley Veterinary Clinic",
+        "clinicAddress": "123 Green Valley Rd, Springfield",
+        "qualification": "DVM, Board Certified in Internal Medicine",
+        "experience": "10 years in small animal practice",
+        "authentication": 1
+    },
+    {
+        "userName": "bob_brown",
+        "email": "bob.brown@example.com",
+        "phoneNum": "456-789-0123",
+        "password": "password012",
+        "fullName": "Bob Brown",
+        "dob": "1990-02-28",
+        "gender": "Male",
+        "nameOfConsultingRoom": "Sunnydale Animal Hospital",
+        "clinicAddress": "456 Sunnydale Ave, Springfield",
+        "qualification": "DVM, Specialization in Surgery",
+        "experience": "8 years in large animal practice",
+        "authentication": 0
+    },
+    {
+        "userName": "david_miller",
+        "email": "david.miller@example.com",
+        "phoneNum": "678-901-2345",
+        "password": "password678",
+        "fullName": "David Miller",
+        "dob": "1988-12-08",
+        "gender": "Male",
+        "nameOfConsultingRoom": "Oakwood Veterinary Services",
+        "clinicAddress": "789 Oakwood Dr, Springfield",
+        "qualification": "DVM, Advanced in Cardiology",
+        "experience": "12 years in mixed practice",
+        "authentication": 1
+    },
+    {
+        "userName": "frank_wilson",
+        "email": "frank.wilson@example.com",
+        "phoneNum": "890-123-4567",
+        "password": "password234",
+        "fullName": "Frank Wilson",
+        "dob": "1983-03-15",
+        "gender": "Male",
+        "nameOfConsultingRoom": "Lakeside Veterinary Clinic",
+        "clinicAddress": "101 Lakeside Blvd, Springfield",
+        "qualification": "DVM, Specialization in Dermatology",
+        "experience": "15 years in small animal practice",
+        "authentication": 1
+    },
+    {
+        "userName": "hank_taylor",
+        "email": "hank.taylor@example.com",
+        "phoneNum": "012-345-6789",
+        "password": "password890",
+        "fullName": "Hank Taylor",
+        "dob": "1992-07-31",
+        "gender": "Male",
+        "nameOfConsultingRoom": "Mountainview Animal Clinic",
+        "clinicAddress": "202 Mountainview St, Springfield",
+        "qualification": "DVM, General Practice",
+        "experience": "5 years in mixed practice",
+        "authentication": 0
+    },
+    {
+        "userName": "jack_smith",
+        "email": "jack.smith@example.com",
+        "phoneNum": "234-567-8902",
+        "password": "password5678",
+        "fullName": "Jack Smith",
+        "dob": "1976-06-02",
+        "gender": "Male",
+        "nameOfConsultingRoom": "Riverside Animal Hospital",
+        "clinicAddress": "303 Riverside Dr, Springfield",
+        "qualification": "DVM, Board Certified in Orthopedics",
+        "experience": "7 years in small animal practice",
+        "authentication": 1
+    },
+    {
+        "userName": "leo_white",
+        "email": "leo.white@example.com",
+        "phoneNum": "456-789-0124",
+        "password": "password1122",
+        "fullName": "Leo White",
+        "dob": "1977-06-13",
+        "gender": "Male",
+        "nameOfConsultingRoom": "Westwood Veterinary Clinic",
+        "clinicAddress": "404 Westwood Ln, Springfield",
+        "qualification": "DVM, Specialization in Neurology",
+        "experience": "11 years in small animal practice",
+        "authentication": 1
+    },
+    {
+        "userName": "nate_martin",
+        "email": "nate.martin@example.com",
+        "phoneNum": "678-901-2346",
+        "password": "password5566",
+        "fullName": "Nate Martin",
+        "dob": "1962-12-18",
+        "gender": "Male",
+        "nameOfConsultingRoom": "Pinecrest Veterinary Services",
+        "clinicAddress": "505 Pinecrest Blvd, Springfield",
+        "qualification": "DVM, Advanced in Medicine",
+        "experience": "6 years in mixed practice",
+        "authentication": 0
+    },
+    {
+        "userName": "paul_anderson",
+        "email": "paul.anderson@example.com",
+        "phoneNum": "890-123-4568",
+        "password": "password9900",
+        "fullName": "Paul Anderson",
+        "dob": "1995-09-12",
+        "gender": "Male",
+        "nameOfConsultingRoom": "Clearwater Animal Clinic",
+        "clinicAddress": "606 Clearwater St, Springfield",
+        "qualification": "DVM, Specialization in Exotic Animals",
+        "experience": "14 years in exotic animal practice",
+        "authentication": 1
+    },
+    {
+        "userName": "rachel_thomas",
+        "email": "rachel.thomas@example.com",
+        "phoneNum": "012-345-6780",
+        "password": "password4455",
+        "fullName": "Rachel Thomas",
+        "dob": "1988-05-28",
+        "gender": "Female",
+        "nameOfConsultingRoom": "Seaside Veterinary Clinic",
+        "clinicAddress": "707 Seaside Dr, Springfield",
+        "qualification": "DVM, Advanced in Surgery",
+        "experience": "9 years in mixed practice",
+        "authentication": 1
+    },
+	    {
+        "userName": "@Seany",
+        "email": "seansophie@gmail.com",
+        "phoneNum": "455-842-5456",
+        "password": "121331312",
+        "fullName": "Sean Sophie",
+        "dob": "2000-07-12",
+        "gender": "Female",
+        "nameOfConsultingRoom": "Happy Pi's Friends",
+        "clinicAddress": "31st,  Backer road, London, UK",
+        "qualification": "DVM, General Practice",
+        "experience": "With two years of professional experience at London Vet Specialists, I served as a primary care physician, providing comprehensive medical care and ensuring high standards of treatment for a diverse range of animal patients.",
+        "authentication": 1
+    },
+ 
+]
+
+-- Pets:
+[
+    {
+        "img": "https://i.pinimg.com/564x/53/2f/09/532f09ec0ecb7d40cfd8f5d226d60a5e.jpg",
+        "petType": "Dog",
+        "petName": "Simon",
+        "age": 5,
+        "sex": "Male",
+        "weight": "30kg",
+        "height": "50cm",
+        "identification": "Golden retriever with a white patch on chest",
+        "idOwnerUser": 2,
+        "idVetUser": 1
+    },
+    {
+        "img": "https://i.pinimg.com/564x/53/2f/09/532f09ec0ecb7d40cfd8f5d226d60a5e.jpg",
+        "petType": "Dog",
+        "petName": "Buddy",
+        "age": 5,
+        "sex": "Male",
+        "weight": "30kg",
+        "height": "50cm",
+        "identification": "Golden retriever with a white patch on chest",
+        "idOwnerUser": 1,
+        "idVetUser": 1
+    },
+    {
+        "img": "https://hips.hearstapps.com/hmg-prod/images/large-cat-breed-1553197454.jpg?https://hips.hearstapps.com/hmg-prod/images/neva-masquerade-royalty-free-image-1674509896.jpg?crop=1.00xw:0.824xh;0,0.0421xh&resize=1200:*",
+        "petType": "Cat",
+        "petName": "Whiskers",
+        "age": 3,
+        "sex": "Female",
+        "weight": "5kg",
+        "height": "25cm",
+        "identification": "Tabby with white markings and green eyes",
+        "idOwnerUser": 1,
+        "idVetUser": 1
+    },
+    {
+        "img": "https://i.pinimg.com/564x/78/fb/26/78fb262b28ffd290f77efd5a928c7cd8.jpg",
+        "petType": "Bird",
+        "petName": "Tweety",
+        "age": 2,
+        "sex": "Female",
+        "weight": "0.5kg",
+        "height": "20cm",
+        "identification": "Colorful feathers with a long tail",
+        "idOwnerUser": 3,
+        "idVetUser": 4
+    },
+    {
+        "img": "https://i.pinimg.com/564x/dd/78/bf/dd78bf545a8c11e694c2df6f0a23ab24.jpg",
+        "petType": "Dog",
+        "petName": "Rex",
+        "age": 4,
+        "sex": "Male",
+        "weight": "35kg",
+        "height": "55cm",
+        "identification": "German shepherd with black and tan fur",
+        "idOwnerUser": 3,
+        "idVetUser": 2
+    },
+    {
+        "img": "https://www.katdootje.nl/wp-content/uploads/What-Breed-Are-Black-Cats.webp",
+        "petType": "Cat",
+        "petName": "Fluffy",
+        "age": 6,
+        "sex": "Female",
+        "weight": "6kg",
+        "height": "30cm",
+        "identification": "Solid black cat with golden eyes",
+        "idOwnerUser": 5,
+        "idVetUser": 2
+    },
+    {
+        "img": "https://i.pinimg.com/564x/bf/4d/58/bf4d58983bb1365601a789593ebda440.jpg",
+        "petType": "Rabbit",
+        "petName": "Thumper",
+        "age": 1,
+        "sex": "Male",
+        "weight": "2kg",
+        "height": "15cm",
+        "identification": "White with floppy ears and brown spots",
+        "idOwnerUser": 7,
+        "idVetUser": 7
+    },
+    {
+        "img": "https://i.pinimg.com/564x/b6/7f/e8/b67fe88fbe102e91e86ccd23e71cf2ba.jpg",
+        "petType": "Dog",
+        "petName": "Max",
+        "age": 7,
+        "sex": "Male",
+        "weight": "25kg",
+        "height": "45cm",
+        "identification": "Boxer with a brindle coat",
+        "idOwnerUser": 4,
+        "idVetUser": 3
+    },
+    {
+        "img": "https://thumbor.forbes.com/thumbor/fit-in/1290x/https://www.forbes.com/advisor/wp-content/uploads/2023/09/getty_creative.jpeg.jpg",
+        "petType": "Cat",
+        "petName": "Bella",
+        "age": 4,
+        "sex": "Female",
+        "weight": "4kg",
+        "height": "20cm",
+        "identification": "Tortoiseshell cat with green eyes",
+        "idOwnerUser": 4,
+        "idVetUser": 4
+    },
+    {
+        "img": "https://cdn.pixabay.com/photo/2023/09/19/12/34/dog-8262506_1280.jpg",
+        "petType": "Dog",
+        "petName": "Charlie",
+        "age": 2,
+        "sex": "Male",
+        "weight": "28kg",
+        "height": "50cm",
+        "identification": "Retriever with a yellow coat, affectionate and easygoing",
+        "idOwnerUser": 9,
+        "idVetUser": 5
+    },
+    {
+        "img": "https://www.forbes.com/advisor/wp-content/uploads/2023/09/persian_cat.jpeg.jpg.jpg",
+        "petType": "Cat",
+        "petName": "Mittens",
+        "age": 3,
+        "sex": "Female",
+        "weight": "3kg",
+        "height": "22cm",
+        "identification": "White markings, green eyes, and a playful demeanor",
+        "idOwnerUser": 9,
+        "idVetUser": 5
+    },
+    {
+        "img": "https://www.forbes.com/advisor/wp-content/uploads/2023/09/British_shorthair.jpeg.jpg",
+        "petType": "Cat",
+        "petName": "Socks",
+        "age": 5,
+        "sex": "Female",
+        "weight": "4.5kg",
+        "height": "28cm",
+        "identification": "Solid black cat with striking golden eyes and a sleek coat",
+        "idOwnerUser": 6,
+        "idVetUser": 7
+    },
+    {
+        "img": "https://images.pexels.com/photos/1695632/pexels-photo-1695632.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Dog",
+        "petName": "Daisy",
+        "age": 2,
+        "sex": "Female",
+        "weight": "20kg",
+        "height": "40cm",
+        "identification": "A sleek black coat, gentle giant with a calm demeanor",
+        "idOwnerUser": 6,
+        "idVetUser": 7
+    },
+    {
+        "img": "https://images.pexels.com/photos/1490908/pexels-photo-1490908.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Dog",
+        "petName": "Lucy",
+        "age": 4,
+        "sex": "Female",
+        "weight": "32kg",
+        "height": "52cm",
+        "identification": "Curly white fur, intelligent and lively",
+        "idOwnerUser": 8,
+        "idVetUser": 9
+    },
+    {
+        "img": "https://www.forbes.com/advisor/wp-content/uploads/2023/09/Sphynx.jpeg.jpg",
+        "petType": "Cat",
+        "petName": "Oscar",
+        "age": 3,
+        "sex": "Male",
+        "weight": "5kg",
+        "height": "26cm",
+        "identification": "Classic striped orange tabby with a bold and energetic attitude",
+        "idOwnerUser": 8,
+        "idVetUser": 9
+    },
+    {
+        "img": "https://i.pinimg.com/564x/2f/81/31/2f8131641ca3def614c9ed49b79dc523.jpg",
+        "petType": "Bird",
+        "petName": "Polly",
+        "age": 1,
+        "sex": "Female",
+        "weight": "0.6kg",
+        "height": "22cm",
+        "identification": "Small green parakeet with a yellow head",
+        "idOwnerUser": 8,
+        "idVetUser": 9
+    },
+    {
+        "img": "https://images.pexels.com/photos/1490908/pexels-photo-1490908.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Dog",
+        "petName": "Bruno",
+        "age": 6,
+        "sex": "Male",
+        "weight": "40kg",
+        "height": "60cm",
+        "identification": "Large brown Rottweiler with a sturdy build",
+        "idOwnerUser": 11,
+        "idVetUser": 10
+    },
+    {
+        "img": "https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Cat",
+        "petName": "Shadow",
+        "age": 4,
+        "sex": "Female",
+        "weight": "4kg",
+        "height": "25cm",
+        "identification": "Black cat with piercing green eyes",
+        "idOwnerUser": 10,
+        "idVetUser": 8
+    },
+    {
+        "img": "https://images.pexels.com/photos/56733/pexels-photo-56733.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Bird",
+        "petName": "Sky",
+        "age": 3,
+        "sex": "Male",
+        "weight": "0.3kg",
+        "height": "18cm",
+        "identification": "Blue and white parakeet with a chirpy personality",
+        "idOwnerUser": 10,
+        "idVetUser": 8
+    },
+    {
+        "img": "https://images.pexels.com/photos/1458916/pexels-photo-1458916.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Dog",
+        "petName": "Rocky",
+        "age": 5,
+        "sex": "Male",
+        "weight": "35kg",
+        "height": "55cm",
+        "identification": "Strong bulldog with a muscular build and white coat",
+        "idOwnerUser": 10,
+        "idVetUser": 8
+    },
+    {
+        "img": "https://images.pexels.com/photos/1543793/pexels-photo-1543793.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Cat",
+        "petName": "Cleo",
+        "age": 2,
+        "sex": "Female",
+        "weight": "3.5kg",
+        "height": "22cm",
+        "identification": "Sleek Siamese cat with blue eyes and cream fur",
+        "idOwnerUser": 13,
+        "idVetUser": 10
+    },
+    {
+        "img": "https://images.pexels.com/photos/326012/pexels-photo-326012.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Rabbit",
+        "petName": "Snowball",
+        "age": 1,
+        "sex": "Male",
+        "weight": "1.8kg",
+        "height": "20cm",
+        "identification": "Small white rabbit with pink nose and long ears",
+        "idOwnerUser": 12,
+        "idVetUser": 6
+    },
+    {
+        "img": "https://images.pexels.com/photos/733416/pexels-photo-733416.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Dog",
+        "petName": "Buster",
+        "age": 3,
+        "sex": "Male",
+        "weight": "22kg",
+        "height": "45cm",
+        "identification": "Beagle with brown, black, and white fur",
+        "idOwnerUser": 14,
+        "idVetUser": 3
+    },
+    {
+        "img": "https://images.pexels.com/photos/208773/pexels-photo-208773.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Cat",
+        "petName": "Simba",
+        "age": 4,
+        "sex": "Male",
+        "weight": "4.2kg",
+        "height": "26cm",
+        "identification": "Orange tabby with white paws and playful attitude",
+        "idOwnerUser": 14,
+        "idVetUser": 3
+    },
+    {
+        "img": "https://images.pexels.com/photos/2078772/pexels-photo-2078772.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Bird",
+        "petName": "Pepper",
+        "age": 2,
+        "sex": "Female",
+        "weight": "0.4kg",
+        "height": "15cm",
+        "identification": "Gray cockatiel with orange cheeks and yellow crest",
+        "idOwnerUser": 14,
+        "idVetUser": 3
+    },
+    {
+        "img": "https://images.pexels.com/photos/544269/pexels-photo-544269.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+        "petType": "Dog",
+        "petName": "Zeus",
+        "age": 7,
+        "sex": "Male",
+        "weight": "50kg",
+        "height": "65cm",
+        "identification": "Large German Shepherd with a commanding presence",
+        "idOwnerUser": 14,
+        "idVetUser": 3
+    }
+
+]
+
+
+-- Appointment:
+[
+    {
+        "time": "2024-07-21 10:00:00",
+        "ownerName": "Alice Johnson",
+        "veterinarian": "Jane Smith",
+        "idPet": 1,
+        "idUser": 1
+    },
+    {
+        "time": "2024-07-21 11:00:00",
+        "ownerName": "John Doe",
+        "veterinarian": "Jane Smith",
+        "idPet": 2,
+        "idUser": 1
+    },
+    {
+        "time": "2024-07-21 12:00:00",
+        "ownerName": "John Doe",
+        "veterinarian": "Jane Smith",
+        "idPet": 3,
+        "idUser": 1
+    },
+    {
+        "time": "2024-07-22 09:00:00",
+        "ownerName": "Carol Davis",
+        "veterinarian": "Frank Wilson",
+        "idPet": 4,
+        "idUser": 4
+    },
+    {
+        "time": "2024-07-22 10:30:00",
+        "ownerName": "Carol Davis",
+        "veterinarian": "Bob Brown",
+        "idPet": 5,
+        "idUser": 2
+    },
+    {
+        "time": "2024-07-22 11:00:00",
+        "ownerName": "Iris Moore",
+        "veterinarian": "Bob Brown",
+        "idPet": 6,
+        "idUser": 2
+    },
+    {
+        "time": "2024-07-22 14:00:00",
+        "ownerName": "Mia Harris",
+        "veterinarian": "Leo White",
+        "idPet": 7,
+        "idUser": 7
+    },
+    {
+        "time": "2024-07-23 09:00:00",
+        "ownerName": "Eve Lee",
+        "veterinarian": "David Miller",
+        "idPet": 8,
+        "idUser": 3
+    },
+    {
+        "time": "2024-07-23 10:00:00",
+        "ownerName": "Eve Lee",
+        "veterinarian": "Frank Wilson",
+        "idPet": 9,
+        "idUser": 4
+    },
+    {
+        "time": "2024-07-23 11:00:00",
+        "ownerName": "Quinn Martinez",
+        "veterinarian": "Hank Taylor",
+        "idPet": 10,
+        "idUser": 5
+    },
+    {
+        "time": "2024-07-23 12:00:00",
+        "ownerName": "Quinn Martinez",
+        "veterinarian": "Hank Taylor",
+        "idPet": 11,
+        "idUser": 5
+    },
+    {
+        "time": "2024-07-24 09:00:00",
+        "ownerName": "Karen Jones",
+        "veterinarian": "Leo White",
+        "idPet": 12,
+        "idUser": 7
+    },
+    {
+        "time": "2024-07-24 10:00:00",
+        "ownerName": "Karen Jones",
+        "veterinarian": "Leo White",
+        "idPet": 13,
+        "idUser": 7
+    },
+    {
+        "time": "2024-07-25 09:00:00",
+        "ownerName": "Olivia Davis",
+        "veterinarian": "Paul Anderson",
+        "idPet": 14,
+        "idUser": 9
+    },
+    {
+        "time": "2024-07-25 10:00:00",
+        "ownerName": "Olivia Davis",
+        "veterinarian": "Paul Anderson",
+        "idPet": 15,
+        "idUser": 9
+    },
+    {
+        "time": "2024-07-25 11:00:00",
+        "ownerName": "Olivia Davis",
+        "veterinarian": "Paul Anderson",
+        "idPet": 16,
+        "idUser": 9
+    },
+    {
+        "time": "2024-07-26 09:00:00",
+        "ownerName": "George Smith",
+        "veterinarian": "Rachel Thomas",
+        "idPet": 17,
+        "idUser": 10
+    },
+    {
+        "time": "2024-07-26 10:00:00",
+        "ownerName": "Hanimore Alice",
+        "veterinarian": "Nate Martin",
+        "idPet": 18,
+        "idUser": 8
+    },
+    {
+        "time": "2024-07-26 11:00:00",
+        "ownerName": "Hanimore Alice",
+        "veterinarian": "Nate Martin",
+        "idPet": 19,
+        "idUser": 8
+    },
+    {
+        "time": "2024-07-26 12:00:00",
+        "ownerName": "Hanimore Alice",
+        "veterinarian": "Nate Martin",
+        "idPet": 20,
+        "idUser": 8
+    },
+    {
+        "time": "2024-07-27 09:00:00",
+        "ownerName": "Steven Martin",
+        "veterinarian": "Rachel Thomas",
+        "idPet": 21,
+        "idUser": 10
+    },
+    {
+        "time": "2024-07-27 10:30:00",
+        "ownerName": "Linda Wilson",
+        "veterinarian": "Jack Smith",
+        "idPet": 22,
+        "idUser": 6
+    },
+    {
+        "time": "2024-07-27 11:00:00",
+        "ownerName": "Nancy Clark",
+        "veterinarian": "David Miller",
+        "idPet": 23,
+        "idUser": 3
+    },
+    {
+        "time": "2024-07-28 09:30:00",
+        "ownerName": "Nancy Clark",
+        "veterinarian": "David Miller",
+        "idPet": 24,
+        "idUser": 3
+    },
+    {
+        "time": "2024-07-28 10:00:00",
+        "ownerName": "Nancy Clark",
+        "veterinarian": "David Miller",
+        "idPet": 25,
+        "idUser": 3
+    },
+    {
+        "time": "2024-07-28 11:30:00",
+        "ownerName": "Nancy Clark",
+        "veterinarian": "David Miller",
+        "idPet": 26,
+        "idUser": 3
+    },
+    {
+        "time": "2024-07-28 13:00:00",
+        "ownerName": "George Smith",
+        "veterinarian": "Rachel Thomas",
+        "idPet": 17,
+        "idUser": 10
+    },
+    {
+        "time": "2024-07-29 09:00:00",
+        "ownerName": "Hanimore Alice",
+        "veterinarian": "Nate Martin",
+        "idPet": 18,
+        "idUser": 8
+    },
+    {
+        "time": "2024-07-29 10:00:00",
+        "ownerName": "Hanimore Alice",
+        "veterinarian": "Nate Martin",
+        "idPet": 19,
+        "idUser": 8
+    },
+    {
+        "time": "2024-07-30 14:00:00",
+        "ownerName": "Hanimore Alice",
+        "veterinarian": "Nate Martin",
+        "idPet": 20,
+        "idUser": 8
+    }
+]
+
+
+-- Medicine:
+[
+    {
+        "medName": "Antibiotic A",
+        "amount": "30 tablets",
+        "notice": "For bacterial infections",
+        "dose": "10 mg daily",
+        "total": 15.75,
+        "idPet": 1,
+        "idUser": 1
+    },
+    {
+        "medName": "Pain Relief B",
+        "amount": "20 tablets",
+        "notice": "For pain management",
+        "dose": "5 mg twice daily",
+        "total": 12.50,
+        "idPet": 2,
+        "idUser": 1
+    },
+    {
+        "medName": "Vaccine C",
+        "amount": "1 vial",
+        "notice": "For annual vaccination",
+        "dose": "Single dose",
+        "total": 45.00,
+        "idPet": 3,
+        "idUser": 1
+    },
+    {
+        "medName": "Antibiotic D",
+        "amount": "10 tablets",
+        "notice": "For bacterial infections",
+        "dose": "20 mg daily",
+        "total": 25.00,
+        "idPet": 4,
+        "idUser": 4
+    },
+    {
+        "medName": "Antifungal E",
+        "amount": "15 tablets",
+        "notice": "For fungal infections",
+        "dose": "15 mg daily",
+        "total": 30.00,
+        "idPet": 5,
+        "idUser": 2
+    },
+    {
+        "medName": "Heartworm Preventive F",
+        "amount": "6 tablets",
+        "notice": "For heartworm prevention",
+        "dose": "Once a month",
+        "total": 60.00,
+        "idPet": 6,
+        "idUser": 2
+    },
+    {
+        "medName": "Anti-inflammatory G",
+        "amount": "30 tablets",
+        "notice": "For joint inflammation",
+        "dose": "2 tablets daily",
+        "total": 20.50,
+        "idPet": 7,
+        "idUser": 7
+    },
+    {
+        "medName": "Allergy Medicine H",
+        "amount": "15 tablets",
+        "notice": "For seasonal allergies",
+        "dose": "1 tablet daily",
+        "total": 15.00,
+        "idPet": 8,
+        "idUser": 3
+    },
+    {
+        "medName": "Vaccine I",
+        "amount": "1 vial",
+        "notice": "For rabies prevention",
+        "dose": "Single dose",
+        "total": 50.00,
+        "idPet": 9,
+        "idUser": 4
+    },
+    {
+        "medName": "Pain Relief J",
+        "amount": "10 tablets",
+        "notice": "For post-surgery pain",
+        "dose": "5 mg daily",
+        "total": 10.00,
+        "idPet": 10,
+        "idUser": 5
+    },
+    {
+        "medName": "Antibiotic K",
+        "amount": "20 tablets",
+        "notice": "For skin infections",
+        "dose": "10 mg twice daily",
+        "total": 35.75,
+        "idPet": 11,
+        "idUser": 5
+    },
+    {
+        "medName": "Flea Treatment L",
+        "amount": "1 pack",
+        "notice": "For flea prevention",
+        "dose": "Apply once a month",
+        "total": 40.00,
+        "idPet": 12,
+        "idUser": 7
+    },
+    {
+        "medName": "Antibiotic M",
+        "amount": "30 tablets",
+        "notice": "For bacterial infections",
+        "dose": "15 mg daily",
+        "total": 55.00,
+        "idPet": 13,
+        "idUser": 7
+    },
+    {
+        "medName": "Antifungal N",
+        "amount": "20 tablets",
+        "notice": "For fungal infections",
+        "dose": "10 mg daily",
+        "total": 40.00,
+        "idPet": 14,
+        "idUser": 9
+    },
+    {
+        "medName": "Allergy Medicine O",
+        "amount": "10 tablets",
+        "notice": "For allergic reactions",
+        "dose": "5 mg daily",
+        "total": 25.00,
+        "idPet": 15,
+        "idUser": 9
+    },
+    {
+        "medName": "Vaccine P",
+        "amount": "1 vial",
+        "notice": "For annual vaccination",
+        "dose": "Single dose",
+        "total": 45.00,
+        "idPet": 16,
+        "idUser": 9
+    },
+    {
+        "medName": "Antibiotic Q",
+        "amount": "30 tablets",
+        "notice": "For respiratory infections",
+        "dose": "20 mg daily",
+        "total": 75.00,
+        "idPet": 17,
+        "idUser": 10
+    },
+    {
+        "medName": "Pain Relief R",
+        "amount": "20 tablets",
+        "notice": "For chronic pain",
+        "dose": "10 mg twice daily",
+        "total": 30.00,
+        "idPet": 18,
+        "idUser": 8
+    },
+    {
+        "medName": "Heartworm Preventive S",
+        "amount": "3 tablets",
+        "notice": "For heartworm prevention",
+        "dose": "Once a month",
+        "total": 30.00,
+        "idPet": 19,
+        "idUser": 8
+    },
+    {
+        "medName": "Flea Treatment T",
+        "amount": "1 pack",
+        "notice": "For flea prevention",
+        "dose": "Apply once a month",
+        "total": 40.00,
+        "idPet": 20,
+        "idUser": 8
+    },
+    {
+        "medName": "Pain Reliever B",
+        "amount": "20 tablets",
+        "notice": "For pain relief and inflammation",
+        "dose": "50 mg daily",
+        "total": 25.00,
+        "idPet": 21,
+        "idUser": 10
+    },
+    {
+        "medName": "Anti-inflammatory C",
+        "amount": "10 tablets",
+        "notice": "For joint pain",
+        "dose": "25 mg twice a day",
+        "total": 18.5,
+        "idPet": 22,
+        "idUser": 6
+    },
+    {
+        "medName": "Antibiotic B",
+        "amount": "15 tablets",
+        "notice": "For skin infection",
+        "dose": "20 mg twice a day",
+        "total": 22.0,
+        "idPet": 23,
+        "idUser": 3
+    },
+    {
+        "medName": "Heartworm Prevention",
+        "amount": "6 tablets",
+        "notice": "Monthly heartworm prevention",
+        "dose": "5 mg per month",
+        "total": 45.0,
+        "idPet": 24,
+        "idUser": 3
+    },
+    {
+        "medName": "Antifungal Cream",
+        "amount": "1 tube",
+        "notice": "Topical for fungal infections",
+        "dose": "Apply twice daily",
+        "total": 12.5,
+        "idPet": 25,
+        "idUser": 3
+    },
+    {
+        "medName": "Allergy Relief",
+        "amount": "30 tablets",
+        "notice": "For seasonal allergies",
+        "dose": "10 mg daily",
+        "total": 30.0,
+        "idPet": 26,
+        "idUser": 3
+    },
+    {
+        "medName": "Diabetes Insulin",
+        "amount": "3 vials",
+        "notice": "For insulin regulation",
+        "dose": "2 units twice a day",
+        "total": 60.0,
+        "idPet": 21,
+        "idUser": 10
+    },
+    {
+        "medName": "Ear Infection Drops",
+        "amount": "1 bottle",
+        "notice": "For ear infections",
+        "dose": "Apply 3 drops twice a day",
+        "total": 25.0,
+        "idPet": 22,
+        "idUser": 6
+    },
+    {
+        "medName": "Steroid Injection",
+        "amount": "1 injection",
+        "notice": "For severe allergies",
+        "dose": "10 mg",
+        "total": 50.0,
+        "idPet": 23,
+        "idUser": 3
+    },
+    {
+        "medName": "Antibiotic C",
+        "amount": "20 tablets",
+        "notice": "For bacterial infections",
+        "dose": "15 mg twice a day",
+        "total": 28.0,
+        "idPet": 24,
+        "idUser": 3
+    }
+]
+
+
+-- Vaccine:
+[
+    {
+        "vacName": "Rabies Vaccine",
+        "date": "2024-01-15",
+        "dose": "1 ml",
+        "total": 30.5,
+        "idPet": 1,
+        "idUser": 1
+    },
+    {
+        "vacName": "Distemper Vaccine",
+        "date": "2024-02-10",
+        "dose": "1.5 ml",
+        "total": 35.0,
+        "idPet": 2,
+        "idUser": 1
+    },
+    {
+        "vacName": "Parvovirus Vaccine",
+        "date": "2024-03-05",
+        "dose": "1 ml",
+        "total": 28.0,
+        "idPet": 3,
+        "idUser": 1
+    },
+    {
+        "vacName": "Hepatitis Vaccine",
+        "date": "2024-04-18",
+        "dose": "1 ml",
+        "total": 40.0,
+        "idPet": 4,
+        "idUser": 4
+    },
+    {
+        "vacName": "Leptospirosis Vaccine",
+        "date": "2024-05-12",
+        "dose": "1 ml",
+        "total": 32.5,
+        "idPet": 5,
+        "idUser": 2
+    },
+    {
+        "vacName": "Bordetella Vaccine",
+        "date": "2024-06-08",
+        "dose": "1.5 ml",
+        "total": 36.0,
+        "idPet": 6,
+        "idUser": 2
+    },
+    {
+        "vacName": "Parainfluenza Vaccine",
+        "date": "2024-07-15",
+        "dose": "1 ml",
+        "total": 30.0,
+        "idPet": 7,
+        "idUser": 7
+    },
+    {
+        "vacName": "Canine Influenza Vaccine",
+        "date": "2024-08-23",
+        "dose": "1.5 ml",
+        "total": 38.0,
+        "idPet": 8,
+        "idUser": 3
+    },
+    {
+        "vacName": "Lyme Disease Vaccine",
+        "date": "2024-09-05",
+        "dose": "1 ml",
+        "total": 33.5,
+        "idPet": 9,
+        "idUser": 4
+    },
+    {
+        "vacName": "Feline Herpesvirus Vaccine",
+        "date": "2024-10-19",
+        "dose": "1 ml",
+        "total": 40.0,
+        "idPet": 10,
+        "idUser": 5
+    },
+    {
+        "vacName": "Feline Calicivirus Vaccine",
+        "date": "2024-11-05",
+        "dose": "1.2 ml",
+        "total": 34.5,
+        "idPet": 11,
+        "idUser": 5
+    },
+    {
+        "vacName": "Feline Leukemia Vaccine",
+        "date": "2024-11-25",
+        "dose": "1 ml",
+        "total": 45.0,
+        "idPet": 12,
+        "idUser": 7
+    },
+    {
+        "vacName": "Feline Immunodeficiency Virus Vaccine",
+        "date": "2024-12-10",
+        "dose": "1.5 ml",
+        "total": 50.0,
+        "idPet": 13,
+        "idUser": 7
+    },
+    {
+        "vacName": "Rabies Vaccine",
+        "date": "2024-12-22",
+        "dose": "1 ml",
+        "total": 30.5,
+        "idPet": 14,
+        "idUser": 9
+    },
+    {
+        "vacName": "Canine Coronavirus Vaccine",
+        "date": "2024-12-30",
+        "dose": "1 ml",
+        "total": 35.0,
+        "idPet": 15,
+        "idUser": 9
+    },
+    {
+        "vacName": "Distemper Vaccine",
+        "date": "2025-01-05",
+        "dose": "1 ml",
+        "total": 28.0,
+        "idPet": 16,
+        "idUser": 9
+    },
+    {
+        "vacName": "Hepatitis Vaccine",
+        "date": "2025-01-15",
+        "dose": "1.2 ml",
+        "total": 40.0,
+        "idPet": 17,
+        "idUser": 10
+    },
+    {
+        "vacName": "Parvovirus Vaccine",
+        "date": "2025-01-25",
+        "dose": "1.5 ml",
+        "total": 36.0,
+        "idPet": 18,
+        "idUser": 8
+    },
+    {
+        "vacName": "Leptospirosis Vaccine",
+        "date": "2025-02-05",
+        "dose": "1 ml",
+        "total": 32.5,
+        "idPet": 19,
+        "idUser": 8
+    },
+    {
+        "vacName": "Bordetella Vaccine",
+        "date": "2025-02-20",
+        "dose": "1.5 ml",
+        "total": 36.0,
+        "idPet": 20,
+        "idUser": 8
+    },
+    {
+        "vacName": "Canine Distemper Vaccine",
+        "date": "2025-03-10",
+        "dose": "1 ml",
+        "total": 35.0,
+        "idPet": 21,
+        "idUser": 10
+    },
+    {
+        "vacName": "Feline Leukemia Vaccine",
+        "date": "2025-03-22",
+        "dose": "1 ml",
+        "total": 45.0,
+        "idPet": 22,
+        "idUser": 6
+    },
+    {
+        "vacName": "Rabies Vaccine",
+        "date": "2025-04-05",
+        "dose": "1 ml",
+        "total": 30.5,
+        "idPet": 23,
+        "idUser": 3
+    },
+    {
+        "vacName": "Canine Influenza Vaccine",
+        "date": "2025-04-17",
+        "dose": "1.5 ml",
+        "total": 38.0,
+        "idPet": 24,
+        "idUser": 3
+    },
+    {
+        "vacName": "Lyme Disease Vaccine",
+        "date": "2025-05-01",
+        "dose": "1 ml",
+        "total": 33.5,
+        "idPet": 25,
+        "idUser": 3
+    },
+    {
+        "vacName": "Feline Calicivirus Vaccine",
+        "date": "2025-05-15",
+        "dose": "1.2 ml",
+        "total": 34.5,
+        "idPet": 26,
+        "idUser": 3
+    },
+    {
+        "vacName": "Leptospirosis Vaccine",
+        "date": "2025-06-02",
+        "dose": "1 ml",
+        "total": 32.5,
+        "idPet": 21,
+        "idUser": 10
+    },
+    {
+        "vacName": "Feline Herpesvirus Vaccine",
+        "date": "2025-06-10",
+        "dose": "1 ml",
+        "total": 40.0,
+        "idPet": 22,
+        "idUser": 6
+    },
+    {
+        "vacName": "Canine Distemper Vaccine",
+        "date": "2025-06-20",
+        "dose": "1 ml",
+        "total": 28.0,
+        "idPet": 23,
+        "idUser": 3
+    },
+    {
+        "vacName": "Rabies Vaccine",
+        "date": "2025-07-05",
+        "dose": "1 ml",
+        "total": 30.5,
+        "idPet": 24,
+        "idUser": 3
+    }
+]

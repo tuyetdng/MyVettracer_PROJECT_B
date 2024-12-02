@@ -15,7 +15,6 @@ public class UpdateSystemVetUserRequest {
     String email;
     String phoneNum;
     @Size(min = 5, max = 20, message = "PASSWORD_INVALID")
-    String password;
     String fullName;
     String dob;
     String gender;

@@ -26,29 +26,29 @@ import java.util.List;
 public class MedicineController {
     MedicineService medicineService;
 
-    @PostMapping("/addmedicine")
+    @PostMapping()
     APIResponse<Medicine> createMedicine(@RequestBody @Valid CreateMedicineRequest request) {
         APIResponse<Medicine> apiResponse = new APIResponse<>();
         apiResponse.setResult(medicineService.createMedicine(request));
         return apiResponse;
     }
 
-    @GetMapping("/getmedicines/{mec_id}")
+    @GetMapping("/{mec_id}")
     MedicineResponse getMedicines(@PathVariable int mec_id) {
         return medicineService.getMedicines(mec_id);
     }
 
-    @GetMapping("/getmedicines")
+    @GetMapping()
     public List<MedicineResponse> getMedicines() {
         return medicineService.getMedicines();
     }
 
-    @PutMapping("/updatemedicine/{mec_id}")
+    @PutMapping("/{mec_id}")
     MedicineResponse updateMedicine(@PathVariable Integer mec_id, @RequestBody @Valid UpdateMedicineRequest request) {
         return medicineService.updateMedicine(mec_id, request);
     }
 
-    @DeleteMapping("/deletemedicine/{mec_id}")
+    @DeleteMapping("/{mec_id}")
     String deleteMedicine(@PathVariable Integer mec_id) {
         medicineService.deleteMedicine(mec_id);
         return "Medicine deleted";

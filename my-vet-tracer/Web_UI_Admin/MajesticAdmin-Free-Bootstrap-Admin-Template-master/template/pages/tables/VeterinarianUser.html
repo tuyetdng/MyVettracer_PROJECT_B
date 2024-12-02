@@ -112,6 +112,8 @@
     </style>
     <!-- fetch api -->
     <script>
+        const token = localStorage.getItem("authToken");
+
         function calculateAge(dateOfBirth) {
             // format of dateOfBirth: YYYY-MM-DD
             const birthYear = parseInt(dateOfBirth.substring(0, 4), 10);
@@ -134,6 +136,8 @@
         }
 
         async function addUser() {
+            let roles = ['VET_USER'];
+
             const payload = {
                 userName: document.getElementById("new_userName").value,
                 fullName: document.getElementById("new_fullName").value,
@@ -146,11 +150,13 @@
                 qualification: document.getElementById("new_qualification").value,
                 experience: document.getElementById("new_experience").value,
                 password: document.getElementById("new_password").value,
-                authentication: document.getElementById("new_authentication").checked ? 1 : 0
+                authentication: document.getElementById("new_authentication").checked ? 1 : 0,
+                roles: roles
+
             };
 
             try {
-                const response = await fetch(`http://localhost:8080/myvettracer/vetuser/addvetuser`, {
+                const response = await fetch(`http://localhost:8081/http://localhost:8080/myvettracer/vetuser`, {
                     method: "POST",
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -197,15 +203,13 @@
             var clinicAddress = row.cells[10].innerText;
             var qualification = row.cells[11].innerText;
             var experience = row.cells[12].innerText;
-            var password = row.cells[13].innerText;
-            var authentication = row.cells[14].innerText;
+            var authentication = row.cells[13].innerText;
 
             document.getElementById("userName").value = userName;
             document.getElementById("fullName").value = fullName;
             document.getElementById("email").value = email;
             document.getElementById("phoneNum").value = phoneNum;
             document.getElementById("dob").value = dob;
-            document.getElementById("password").value = password;
             if (gender === 'Male') {
                 document.getElementById("gender").value = 'Male';
             } else if (gender === 'Female') {
@@ -228,12 +232,13 @@
         }
 
         async function Edit(key) {
+            let roles = ['VET_USER'];
+
             const payload = {
                 idVetUser: key,
                 userName: document.getElementById("userName").value,
                 email: document.getElementById("email").value,
                 phoneNum: document.getElementById("phoneNum").value,
-                password: document.getElementById("password").value,
                 fullName: document.getElementById("fullName").value,
                 dob: document.getElementById("dob").value,
                 gender: document.getElementById("gender").value,
@@ -241,16 +246,21 @@
                 clinicAddress: document.getElementById("clinicAddress").value,
                 qualification: document.getElementById("qualification").value,
                 experience: document.getElementById("experience").value,
-                authentication: document.getElementById("authentication").checked ? 1 : 0
+                authentication: document.getElementById("authentication").checked ? 1 : 0,
+                roles: roles
+
             };
             console.log(key);
             console.log(payload);
 
             try {
-                const response = await fetch(`http://localhost:8080/myvettracer/vetuser/updatevetuser/${key}`,
+                const response = await fetch(`http://localhost:8081/http://localhost:8080/myvettracer/vetuser/${key}`,
                     {
                         method: "PUT",
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
                         body: JSON.stringify(payload)
                     });
 
@@ -289,11 +299,12 @@
                 });
 
                 if (result.isConfirmed) {
-                    const url = `http://localhost:3000/remove-veterinarian-owner-user-by-id/${key}`;
+                    const url = `http://localhost:8081/http://localhost:8080/myvettracer/vetuser/${key}`;
 
                     const response = await fetch(url, {
                         method: 'DELETE',
                         headers: {
+                            "Authorization": `Bearer ${token}`,
                             'Content-Type': 'application/json', // Đảm bảo đúng định dạng
                         },
                     });
@@ -329,7 +340,7 @@
                     icon: "error",
                 }).then(() => {
                     RenderItem();
-                });;
+                });
             }
         }
         async function RenderItem() {
@@ -356,7 +367,6 @@
                     <td>${data[i].clinicAddress}</td>
                     <td>${data[i].qualification}</td>
                     <td>${data[i].experience}</td>
-                    <td>${data[i].password}</td>
                     <td>${data[i].authentication}</td>
    
                     <td>
@@ -369,9 +379,15 @@
             document.getElementById("VeterinarianBody").innerHTML = str;
         }
         async function GetData() {
-            var url = `http://localhost:8080/myvettracer/vetuser/getvetusers`;
+            var url = `http://localhost:8081/http://localhost:8080/myvettracer/vetuser`;
             try {
-                const response = await fetch(url);
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                });
                 if (!response.ok) {
                     throw new Error(`Response status: ${response.status}`);
                 }
@@ -474,7 +490,7 @@
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="../../admin.html">
+                        <a class="nav-link" href="../../index.html">
                             <i class="mdi mdi-home menu-icon"></i>
                             <span class="menu-title">Dashboard</span>
                         </a>
@@ -503,19 +519,19 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../pages/tables/Appointment_Table.html">
+                        <a class="nav-link" href="../../pages/tables/Appointment.html">
                             <i class="mdi mdi-calendar-clock menu-icon"></i>
                             <span class="menu-title">Appointments</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../pages/tables/Medicine_Table.html">
+                        <a class="nav-link" href="../../pages/tables/Medicine.html">
                             <i class="mdi mdi-hospital menu-icon"></i>
                             <span class="menu-title">Medicine</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="../../pages/tables/Vaccine_Table.html">
+                        <a class="nav-link" href="../../pages/tables/Vaccine.html">
                             <i class="mdi mdi-needle menu-icon"></i>
                             <span class="menu-title">Vaccine</span>
                         </a>
@@ -523,7 +539,6 @@
 
                 </ul>
             </nav>
-
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -560,7 +575,6 @@
                                                     <th>Clinic address</th>
                                                     <th>Qualification</th>
                                                     <th>Experience</th>
-                                                    <th>Password (Token) </th>
                                                     <th>Authentication</th>
                                                     <th>Action</th>
 
@@ -648,13 +662,6 @@
                                                             <label for="experience">Experience</label><br>
                                                             <textarea id="experience" name="experience" rows="3"
                                                                 style="width: 98%;" required></textarea><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <label for="password">Password (Token) </label><br>
-                                                            <input type="text" id="password" name="password"
-                                                                required><br>
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -747,7 +754,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>
+                                                        <td  colspan="2">
                                                             <label for="new_password">Password</label><br>
                                                             <input type="text" id="new_password" name="new_password"
                                                                 required><br>

@@ -16,7 +16,6 @@
     <link rel="shortcut icon" href="../../images/favicon.png" />
     <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <style>
         i {
             color: #07476a;
@@ -115,25 +114,21 @@
     <script>
         const token = localStorage.getItem("authToken");
 
-        async function addPet() {
+        // Function to add a new vaccine
+        async function AddVaccine() {
             const payload = {
-                img: document.getElementById("new_img").value || "",
-                petType: document.getElementById("new_petType").value,
-                petName: document.getElementById("new_petName").value,
-                age: parseInt(document.getElementById("new_age").value) || 0,
-                sex: document.querySelector('input[name="new_sex"]:checked')?.value || "",
-                weight: document.getElementById("new_weight").value || "",
-                height: document.getElementById("new_height").value || "",
-                identification: document.getElementById("new_identification").value,
-                idOwnerUser: document.getElementById("new_idOwnerUser").value,
-                idVetUser: document.getElementById("new_idVetUser").value
-
+                vacName: document.getElementById("newVacName").value,
+                date: document.getElementById("newDate").value,
+                dose: document.getElementById("newDose").value,
+                total: parseFloat(document.getElementById("newTotal").value),
+                idPet: parseInt(document.getElementById("newPetId").value),
+                idUser: parseInt(document.getElementById("newVeterinarianId").value)
             };
-            console.log("Payload:", JSON.stringify(payload));
+
             try {
-                const response = await fetch(`http://localhost:8081/http://localhost:8080/myvettracer/pet`, {
+                const response = await fetch(`http://localhost:8081/http://localhost:8080/myvettracer/vaccine`, {
+                    method: "POST",
                     headers: { 
-                        "Authorization": `Bearer ${token}`,
                         'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
@@ -142,25 +137,23 @@
                     throw new Error(`Error: ${response.statusText}`);
                 }
 
-                Swal.fire("New pet has been added!").then(() => {
-                    document.getElementById('addPetForm').style.display = 'none';
-                    RenderItem();
+                Swal.fire(" Vaccine has been added!").then(() => {
+                    document.getElementById('addVaccineForm').style.display = 'none';
+                    RenderVaccines();
                 });
-                RenderItem();
             } catch (error) {
                 console.error(`Error: ${error.message}`);
                 Swal.fire("Error", "Failed to add data. Please try again.", "error");
             }
         }
 
-        function toggleAddPetForm() {
-            var form = document.getElementById('addPetForm');
+        function addVaccineToggleForm() {
+            var form = document.getElementById('addVaccineForm');
             form.style.display = form.style.display === 'block' ? 'none' : 'block';
         }
 
-
-        function editPetToggleForm(button) {
-            var form = document.getElementById('editPetForm');
+        function editVaccineToggleForm(button) {
+            var form = document.getElementById('editVaccineForm');
 
             if (form.style.display === 'block') {
                 form.style.display = 'none';
@@ -170,88 +163,51 @@
             }
 
             var row = button.parentNode.parentNode;
-            var idPet = row.cells[1].innerText;
-            var idOwnerUser = row.cells[2].innerText;
-            // var img = row.cells[2].innerText;
-            var img = row.cells[3].querySelector('img').src;
-            var name = row.cells[4].innerText;
-            var petType = row.cells[5].innerText;
-            var sex = row.cells[6].innerText;
-            var age = row.cells[7].innerText;
-            var weight = row.cells[8].innerText;
-            var height = row.cells[9].innerText;
-            var identification = row.cells[10].innerText;
-            var idVetUser = row.cells[11].innerText;
+            var idVac = row.cells[1].innerText;
+            var vacName = row.cells[2].innerText;
+            var date = row.cells[3].innerText;
+            var dose = row.cells[4].innerText;
+            var total = row.cells[5].innerText;
+            var petId = row.cells[6].innerText;
+            var veterinarianId = row.cells[7].innerText;
 
 
-            document.getElementById("idOwnerUser").value = idOwnerUser;
-            document.getElementById("img").value = img;
-            document.getElementById("petType").value = petType;
-            document.getElementById("petName").value = name;
-            document.getElementById("age").value = age;
+            document.getElementById("vacName").value = vacName;
+            document.getElementById("date").value = date;
+            document.getElementById("dose").value = dose;
+            document.getElementById("total").value = total;
 
-            if (sex === 'Male') {
-                document.getElementById("male").checked = true;
-            } else if (sex === 'Female') {
-                document.getElementById("female").checked = true;
-            }
-
-            document.getElementById("weight").value = weight;
-            document.getElementById("height").value = height;
-            document.getElementById("identification").value = identification;
-            document.getElementById("idVetUser").value = idVetUser;
 
             document.getElementById("editButton").onclick = function () {
-                Edit(idPet);
+                EditVaccine(idVac);
             };
         }
 
-        async function Edit(key) {
+        async function EditVaccine(key) {
             const payload = {
-                idPet: key,
-                // pet_owner_id: document.getElementById("pet_owner_id")?.value || "",
-                img: document.getElementById("img")?.value || "",
-                petType: document.getElementById("petType")?.value || "",
-                petName: document.getElementById("petName")?.value || "",
-                age: document.getElementById("age")?.value || "",
-                sex: document.querySelector('input[name="sex"]:checked')?.value || "",
-                weight: document.getElementById("weight")?.value || "",
-                height: document.getElementById("height")?.value || "",
-                identification: document.getElementById("identification")?.value || "",
-                idVetUser: document.getElementById("idVetUser")?.value || ""
-
+                idVac: key,
+                vacName: document.getElementById("vacName").value,
+                date: document.getElementById("date").value,
+                dose: document.getElementById("dose").value,
+                total: parseFloat(document.getElementById("total").value),
             };
 
-            const missingFields = Object.keys(payload).filter(key => !payload[key]);
-
-            if (missingFields.length > 0) {
-                console.warn("Missing fields:", missingFields);
-                Swal.fire("Error", `Missing fields: ${missingFields.join(", ")}`, "error");
-                return;
-            }
-
-            console.log(key);
-            console.log(payload);
-
             try {
-                const response = await fetch(`http://localhost:8081/http://localhost:8080/myvettracer/pet/${key}`,
-                    {
-                        method: "PUT",
-                        headers: { 
-                             "Authorization": `Bearer ${token}`,
-                             'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
+                const response = await fetch(`http://localhost:8081/http://localhost:8080/myvettracer/vaccine/${key}`, {
+                    method: "PUT",
+                    headers: { 
+                        "Authorization": `Bearer ${token}`,
+                        'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-                const data = await response.json();
                 if (!response.ok) {
                     throw new Error(`Data update error: ${response.statusText}`);
                 }
 
-                console.log(JSON.stringify(payload));
-                Swal.fire("The data has been saved!").then(() => {
-                    document.getElementById('editPetForm').style.display = 'none';
-                    RenderItem();
+                Swal.fire(" Vaccine has been changed!").then(() => {
+                    document.getElementById('editVaccineForm').style.display = 'none';
+                    RenderVaccines();
                 });
 
             } catch (error) {
@@ -261,11 +217,11 @@
         }
 
         async function deletePostByKey(key) {
-            console.log("Deleting pet with key: " + key);
+            console.log("Deleting vaccine with key: " + key);
 
             try {
                 const result = await Swal.fire({
-                    title: `Are you sure to delete the user ${key}?`,
+                    title: `Are you sure to delete the vaccine ${key}?`,
                     text: "You won't be able to revert this!",
                     icon: "warning",
                     showCancelButton: true,
@@ -275,83 +231,71 @@
                 });
 
                 if (result.isConfirmed) {
-                    const url = `http://localhost:8081/http://localhost:8080/myvettracer/pet/${key}`;
+                    const url = `http://localhost:8081/http://localhost:8080/myvettracer/vaccine/${key}`;
 
                     const response = await fetch(url, {
                         method: 'DELETE',
-                        headers: {
+                        headers: { 
                             "Authorization": `Bearer ${token}`,
-                            'Content-Type': 'application/json', // Đảm bảo đúng định dạng
-                        },
+                            'Content-Type': 'application/json' },
                     });
-
-                    console.log('Response status:', response.status);
 
                     if (!response.ok) {
                         const errorMsg = await response.text();
                         throw new Error(`Failed to delete: ${errorMsg}`);
                     }
 
-                    const res = await response.text();
-                    console.log('Delete response:', res);
-
                     Swal.fire({
                         title: "Deleted!",
-                        text: "The user has been deleted.",
+                        text: "The data has been deleted.",
                         icon: "success",
-                    }).then(() => {
-                        RenderItem();
                     });
+
+                    await RenderVaccines();
                 }
             } catch (err) {
                 console.error('Error:', err);
                 Swal.fire({
                     title: "Error!",
-                    text: error.message,
+                    text: err.message,
                     icon: "error",
                 });
             }
         }
 
-
-        async function RenderItem() {
-            const data = await GetData();
+        async function RenderVaccines() {
+            const data = await GetVaccineData();
 
             if (!data) {
                 console.error('Cannot get data from API.');
                 return;
             }
-            str = '';
-            for (i = 0; i < data.length; i++) {
-                const pet = data[i];
-
-                const ownerUserId = pet.ownerUser.idOwnerUser || 'N/A';
-                const vetUserId = pet.vetUser.idVetUser || 'N/A';
+            let str = '';
+            for (let i = 0; i < data.length; i++) {
+                const vaccine = data[i];
+                const petId = vaccine.pet.idPet || 'N/A';
+                const vetUser = vaccine.vetUser.idVetUser || 'N/A';
                 str += `<tr>
-                    <td>${i + 1}</td>
-                    <td>${pet.idPet}</td>
-                    <td>${ownerUserId}</td>
-                    <td><img src=${pet.img} width="200" height="100"></td>
-                    <td>${pet.petName}</td>
-                    <td>${pet.petType}</td>
-                    <td>${pet.sex}</td>
-                    <td>${pet.age}</td>
-                    <td>${pet.weight}</td>
-                    <td>${pet.height}</td>
-                    <td>${pet.identification}</td>
-                    <td>${vetUserId}</td>
+                     <td>${i + 1}</td>
+                    <td>${vaccine.idVac}</td>
+                    <td>${vaccine.vacName}</td>
+                    <td>${vaccine.date}</td>
+                    <td>${vaccine.dose}</td>
+                    <td>${vaccine.total}</td>
+                   <td>${petId}</td>
+                    <td>${vetUser}</td>
+                    
                     <td>
-                        <button class="button-without-background" onclick="editPetToggleForm(this)"><i class="mdi mdi-table-edit"></i></button>
-                        <button class="button-without-background" onclick="deletePostByKey(${data[i].idPet})"><i class="mdi mdi-delete-forever" ></i> </i></button>
-
+                        <button class="button-without-background" onclick="editVaccineToggleForm(this)"><i class="mdi mdi-table-edit"></i></button>
+                        <button class="button-without-background" onclick="deletePostByKey(${data[i].idVac})"><i class="mdi mdi-delete-forever"></i></button>
                     </td>
-          </tr>`;
+                </tr>`;
             }
-            document.getElementById("PetBody").innerHTML = str;
+            document.getElementById("VaccineBody").innerHTML = str;
         }
 
-        async function GetData() {
-            var url = `http://localhost:8081/http://localhost:8080/myvettracer/pet`;
+        async function GetVaccineData() {
+            const url = 'http://localhost:8081/http://localhost:8080/myvettracer/vaccine';
             try {
                 const response = await fetch(url, {
                     method: "GET",
@@ -366,12 +310,15 @@
 
                 const json = await response.json();
                 return json;
+
             } catch (error) {
                 console.error(error.message);
             }
             return null;
         }
     </script>
+
+
 </head>
 
 <body>
@@ -511,6 +458,7 @@
 
                 </ul>
             </nav>
+
             <!-- partial -->
             <div class="main-panel">
                 <div class="content-wrapper">
@@ -520,11 +468,11 @@
                                 <div class="card-body">
                                     <div class="containerTitle">
                                         <div class=" left-alignTitle">
-                                            <h3 style="color: rgb(92, 92, 97); font-weight: 700;">Pets Table</h3>
+                                            <h3 style="color: rgb(92, 92, 97); font-weight: 700;">Vaccine Table</h3>
                                         </div>
                                         <div class=" right-alignTitle">
                                             <button type="button" class="btn btn-outline-primary btn-icon-text"
-                                                onclick="toggleAddPetForm()">
+                                                onclick="addVaccineToggleForm()">
                                                 <i class="mdi mdi-playlist-plus"></i>Add
                                             </button>
                                         </div>
@@ -534,187 +482,114 @@
                                             <thead>
                                                 <tr class="bg-primary text-white">
                                                     <th>#</th>
+                                                    <th>ID</th>
+                                                    <th>Vaccine</th>
+                                                    <th>Date</th>
+                                                    <th>Dose</th>
+                                                    <th>Total</th>
                                                     <th>Pet ID</th>
-                                                    <th>Owner ID</th>
-                                                    <th>Avata</th>
-                                                    <th>Name</th>
-                                                    <th>Pet type</th>
-                                                    <th>Sex</th>
-                                                    <th>Age</th>
-                                                    <th>Weight</th>
-                                                    <th>Height</th>
-                                                    <th>Identification</th>
-                                                    <th>Veterinarian</th>
+                                                    <th>Veterinarian ID</th>
                                                     <th>Action</th>
 
                                                 </tr>
                                             </thead>
-                                            <tbody id="PetBody">
+                                            <tbody id="VaccineBody">
 
                                             </tbody>
                                         </table>
-                                        <div class="popup-form" id="editPetForm">
-                                            <span class="popup-close" onclick="editPetToggleForm()">X</span>
+                                        <div class="popup-form" id="editVaccineForm">
+                                            <span class="popup-close" onclick="editVaccineToggleForm()">X</span>
                                             <form>
-                                                <h2>Edit Pet Information</h2>
+                                                <h2>Edit Vaccine Information</h2>
                                                 <hr class="form-title-line">
                                                 <table cellspacing="10px" cellpadding="10px">
                                                     <colgroup style="width: 100%;">
                                                         <col span="1" style="width: 50%;">
                                                         <col span="1" style="width: 50%;">
                                                     </colgroup>
+                                                    <tr>
+                                                        <input type="hidden" id="idVac" name="idVac">
+                                                        <td>
+                                                            <label for="vacName">Vaccine Name:</label><br>
+                                                            <input type="text" id="vacName" name="vacName" required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="date">Date:</label><br>
+                                                            <input type="text" id="date" name="date" required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="dose">Dose:</label><br>
+                                                            <input type="text" id="dose" name="dose" required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="total">Total:</label><br>
+                                                            <input type="text" id="total" name="total" required><br>
+                                                        </td>
+                                                    </tr>
 
-                                                    <tr>
-                                                        <td>
-                                                            <label for="idOwnerUser">Pet Owner ID:</label><br>
-                                                            <input type="text" id="idOwnerUser" name="idOwnerUser"
-                                                                disabled><br>
-                                                        </td>
-                                                        <td>
-                                                            <label for="idVetUser">Veterinarian:</label><br>
-                                                            <input type="text" id="idVetUser" name="idVetUser"
-                                                                required><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label for="petName">Pet Name:</label><br>
-                                                            <input type="text" id="petName" name="petName"><br>
-                                                        </td>
-                                                        <td>
-                                                            <label for="petType">Pet Type:</label><br>
-                                                            <input type="text" id="petType" name="petType" required><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label for="age">Age:</label><br>
-                                                            <input type="number" id="age" name="age" required><br>
-                                                        </td>
-                                                        <td>
-                                                            <label for="sex">Sex:</label><br>
-                                                            <input type="radio" id="male" name="sex" value="Male"
-                                                                required>
-                                                            <label for="male">Male</label>
-                                                            <input type="radio" id="female" name="sex" value="Female"
-                                                                required>
-                                                            <label for="female">Female</label>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label for="height">Height:</label><br>
-                                                            <input type="text" id="height" name="height"
-                                                                placeholder="cm"><br>
-                                                        </td>
-                                                        <td>
-                                                            <label for="weight">Weight:</label><br>
-                                                            <input type="text" id="weight" name="weight"
-                                                                placeholder="kg"><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <label for="identification">Identification:</label><br>
-                                                            <textarea id="identification" name="identification"
-                                                                rows="3" required></textarea><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <label for="img">Image URL:</label><br>
-                                                            <input type="text" id="img" name="img"><br>
-                                                        </td>
-                                                    </tr>
                                                 </table>
-                                                <input type="button" id="editButton" value="Edit" onclick="Edit()">
+                                                <input type="button" id="editButton" value="Edit"
+                                                    onclick="EditVaccine()">
                                             </form>
                                         </div>
 
-                                        <div class="popup-form" id="addPetForm">
-                                            <span class="popup-close" onclick="toggleAddPetForm()">X</span>
+                                        <!-- Add Vaccine Form -->
+                                        <div class="popup-form" id="addVaccineForm">
+                                            <span class="popup-close" onclick="addVaccineToggleForm()">X</span>
                                             <form>
-                                                <h2>Add New Pet</h2>
+                                                <h2>Add Vaccine</h2>
                                                 <hr class="form-title-line">
                                                 <table cellspacing="10px" cellpadding="10px">
                                                     <colgroup style="width: 100%;">
                                                         <col span="1" style="width: 50%;">
                                                         <col span="1" style="width: 50%;">
                                                     </colgroup>
+                                                    <tr>
 
-                                                    <tr>
                                                         <td>
-                                                            <label for="new_idOwnerUser">Pet Owner ID:</label><br>
-                                                            <input type="text" id="new_idOwnerUser"
-                                                                name="new_idOwnerUser" required><br>
+                                                            <label for="newVacName">Vaccine Name:</label><br>
+                                                            <input type="text" id="newVacName" name="newVacName"
+                                                                required><br>
                                                         </td>
                                                         <td>
-                                                            <label for="new_idVetUser">Veterinarian:</label><br>
-                                                            <input type="text" id="new_idVetUser" name="new_idVetUser"
+                                                            <label for="newDate">Date:</label><br>
+                                                            <input type="text" id="newDate" name="newDate" required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="newDose">Dose:</label><br>
+                                                            <input type="text" id="newDose" name="newDose" required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="newTotal">Total:</label><br>
+                                                            <input type="text" id="newTotal" name="newTotal"
                                                                 required><br>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>
-                                                            <label for="new_petName">Pet Name:</label><br>
-                                                            <input type="text" id="new_petName" name="new_petName"><br>
-                                                        </td>
-                                                        <td>
-                                                            <label for="new_petType">Pet Type:</label><br>
-                                                            <input type="text" id="new_petType" name="new_petType"
-                                                                required><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label for="new_age">Age:</label><br>
-                                                            <input type="number" id="new_age" name="new_age"
+                                                            <label for="newPetId">Pet ID:</label><br>
+                                                            <input type="text" id="newPetId" name="newPetId"
                                                                 required><br>
                                                         </td>
                                                         <td>
-                                                            <label for="new_sex">Sex:</label><br>
-                                                            <input type="radio" id="male" name="new_sex" value="Male"
-                                                                required>
-                                                            <label for="male">Male</label>
-                                                            <input type="radio" id="female" name="new_sex"
-                                                                value="Female" required>
-                                                            <label for="female">Female</label>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label for="new_height">Height:</label><br>
-                                                            <input type="text" id="new_height" name="new_height"
-                                                                placeholder="cm"><br>
-                                                        </td>
-                                                        <td>
-                                                            <label for="new_weight">Weight:</label><br>
-                                                            <input type="text" id="new_weight" name="new_weight"
-                                                                placeholder="kg"><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <label for="new_identification">Identification:</label><br>
-                                                            <textarea id="new_identification" name="new_identification"
-                                                                rows="3" required></textarea><br>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="2">
-                                                            <label for="new_img">Image URL:</label><br>
-                                                            <input type="text" id="new_img" name="new_img"><br>
+                                                            <label for="newVeterinarianId">Veterinarian
+                                                                ID:</label><br>
+                                                            <input type="text" id="newVeterinarianId"
+                                                                name="newVeterinarianId" required><br>
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                <input type="button" value="Add Pet" onclick="addPet()">
+                                                <input type="button" id="addButton" value="Add" onclick="AddVaccine()">
                                             </form>
                                         </div>
 
 
                                         <script>
-                                            RenderItem();
-
+                                            RenderVaccines();
 
                                         </script>
 
