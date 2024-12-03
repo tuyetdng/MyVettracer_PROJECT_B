@@ -12,6 +12,7 @@ import com.tuyetdang.my_vet_tracer.Repository.VetUserRepository;
 import com.tuyetdang.my_vet_tracer.dto.request.AuthenticationRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.IntrospectRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.LogoutRequest;
+import com.tuyetdang.my_vet_tracer.dto.request.RefreshRequest;
 import com.tuyetdang.my_vet_tracer.dto.response.AuthenticationResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.IntrospectResponse;
 import com.tuyetdang.my_vet_tracer.exception.AppException;
@@ -51,7 +52,18 @@ public class AuthenticationService {
     OwnerUserRepository ownerUserRepository;
     VetUserRepository vetUserRepository;
 
+    @NonFinal
+    @Value("${jwt.valid-duration}")
+    protected long VALID_DURATION;
+
+    @NonFinal
+    @Value("${jwt.refreshable-duration}")
+    protected long REFRESHABLE_DURATION;
+
     InvalidatedTokenRepository invalidatedTokenRepository;
+
+    JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -62,11 +74,15 @@ public class AuthenticationService {
 
 
         boolean authenticated;
+        String userName = "";
 
-        if (foundUser.get() instanceof OwnerUser) {
+        if (foundUser.get() instanceof OwnerUser ownerUser) {
             authenticated = passwordEncoder.matches(request.getPassword(), ((OwnerUser) foundUser.get()).getPassword());
-        } else if (foundUser.get() instanceof VetUser) {
+            userName = ownerUser.getUserName();
+        } else if (foundUser.get() instanceof VetUser vetUser) {
             authenticated = passwordEncoder.matches(request.getPassword(), ((VetUser) foundUser.get()).getPassword());
+            userName = vetUser.getUserName();
+
         } else {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
@@ -86,7 +102,6 @@ public class AuthenticationService {
     }
 
     private String generateToken(Object user) {
-        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);   //Algorithm secure header
         String scope = "";
         String username = "";
 
@@ -104,7 +119,7 @@ public class AuthenticationService {
                 .issuer("vettracer.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                        Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()
                 ))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", scope)
@@ -156,7 +171,7 @@ public class AuthenticationService {
         boolean isValid = true;
 
         try {
-            verifyToken(token);
+            verifyToken(token, false);
         } catch (AppException e) {
             isValid = false;
         }
@@ -167,27 +182,37 @@ public class AuthenticationService {
     }
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
-        var signToken = verifyToken(request.getToken());
+        try {
+            var signToken = verifyToken(request.getToken(), true); //follow by refresh token time
 
-        String jit = signToken.getJWTClaimsSet().getJWTID();
-        Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+            String jit = signToken.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
 
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jit)
-                .expiryTime(expiryTime)
-                .build();
+            InvalidatedToken invalidatedToken =
+                    InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
 
-        invalidatedTokenRepository.save(invalidatedToken);
+            invalidatedTokenRepository.save(invalidatedToken);
+        } catch (AppException exception) {
+            log.info("Token already expired");
+        }
     }
 
-    private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
+    private SignedJWT verifyToken(String token, boolean isRefresh)
+            throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
 //        String tokenId = signedJWT.getJWTClaimsSet().getJWTID();
 
-        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        Date expiryTime = (isRefresh)
+                ? new Date(signedJWT
+                .getJWTClaimsSet()
+                .getIssueTime()
+                .toInstant()
+                .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                .toEpochMilli())
+                : signedJWT.getJWTClaimsSet().getExpirationTime();
 
         var verified = signedJWT.verify(verifier);
 
@@ -200,5 +225,38 @@ public class AuthenticationService {
 
         return signedJWT;
     }
+
+public AuthenticationResponse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+    var signedJWT = verifyToken(request.getToken(), true);
+
+    var jit = signedJWT.getJWTClaimsSet().getJWTID();
+    var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+    InvalidatedToken invalidatedToken =
+            InvalidatedToken.builder()
+                    .id(jit)
+                    .expiryTime(expiryTime)
+                    .build();
+    invalidatedTokenRepository.save(invalidatedToken);
+
+    var username = signedJWT.getJWTClaimsSet().getSubject();
+
+    Optional<? extends Object> foundUser = ownerUserRepository.findByUserName(username)
+            .map(user -> (Object) user)
+            .or(() -> vetUserRepository.findByUserName(username).map(user -> (Object) user));
+
+
+    if (foundUser.isEmpty()) {
+        throw new AppException(ErrorCode.UNAUTHENTICATED);
+    }
+
+    var token = generateToken(foundUser.get());
+
+    return AuthenticationResponse.builder()
+            .token(token)
+            .authenticated(true)
+            .build();
+}
+
 
 }

@@ -14,7 +14,8 @@ public class PathConstant {
     public static final String[] PUBLIC_AUTH_ENDPOINTS = {
             AUTH + "/token",
             AUTH + "/introspect",
-            AUTH + "/logout"
+            AUTH + "/logout",
+            AUTH + "/refresh"
     };
 
     public static final String[] PUBLIC_GET_ENDPOINTS = {
@@ -24,6 +25,8 @@ public class PathConstant {
             VET_USER + "/user_id",
             PET,
             PET + "/{pet_id}",
+            PET + "/pet-vet/{user_id}", //get pets by vetID
+            PET + "/pet-owner/{user_id}", //get pets by ownerID
             APPOINTMENT,
             APPOINTMENT + "/{app_id}",
             MEDICINE,

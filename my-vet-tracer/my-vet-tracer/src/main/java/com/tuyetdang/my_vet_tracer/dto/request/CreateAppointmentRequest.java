@@ -12,6 +12,7 @@ public class CreateAppointmentRequest {
     String time;
     String ownerName;
     String veterinarian;
+    Integer isConfirmed;
     Integer idUser;
     Integer idPet;
 }

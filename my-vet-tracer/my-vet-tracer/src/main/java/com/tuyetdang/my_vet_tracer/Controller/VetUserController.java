@@ -6,6 +6,7 @@ import com.tuyetdang.my_vet_tracer.dto.request.CreaterSystemVetUserRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdateSystemVetUserRequest;
 import com.tuyetdang.my_vet_tracer.dto.response.APIResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.OwnerUserResponse;
+import com.tuyetdang.my_vet_tracer.dto.response.PetResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.VetUserResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -40,12 +41,15 @@ public class VetUserController {
     VetUserResponse getUsers(@PathVariable int user_id) {
         return userService.getUsers(user_id);
     }
+
     @GetMapping("/myinfo")
     APIResponse<VetUserResponse> getMyInfo() {
         return APIResponse.<VetUserResponse>builder()
                 .result(userService.getMyInfo())
                 .build();
     }
+
+
     @PutMapping("/{user_id}")
     VetUserResponse updateUser(@PathVariable Integer user_id, @RequestBody @Valid UpdateSystemVetUserRequest request) {
         return userService.updateUser(user_id, request);

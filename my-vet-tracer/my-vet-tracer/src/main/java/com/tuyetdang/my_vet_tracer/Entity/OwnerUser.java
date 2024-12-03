@@ -17,6 +17,7 @@ public class OwnerUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idOwnerUser;
+    String img;
     String userName;
     String email;
     String phoneNum;

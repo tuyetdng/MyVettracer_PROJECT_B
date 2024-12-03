@@ -8,9 +8,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateAppointmentRequest {
-    String time;
-    Integer isConfirmed;
-    String ownerName;
-    String veterinarian;
+public class RefreshRequest {
+    String token;
+
 }

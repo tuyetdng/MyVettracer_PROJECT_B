@@ -57,6 +57,22 @@ public class PetService {
                 .collect(Collectors.toList());
     }
 
+    public List<PetResponse> getPetsOfVetUser(Integer vetUserId) {
+        List<Pet> pets = petRepository.findByVetUser_idVetUser(vetUserId);
+
+        return pets.stream()
+                .map(petMapper::toUserResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<PetResponse> getPetsOfOwnerUser(Integer idOwnerUser) {
+        List<Pet> pets = petRepository.findByOwnerUser_idOwnerUser(idOwnerUser);
+
+        return pets.stream()
+                .map(petMapper::toUserResponse)
+                .collect(Collectors.toList());
+    }
+
     public PetResponse updatePet(Integer pet_id, UpdatePetRequest request) {
         Pet pet = petRepository.findById(pet_id)
                 .orElseThrow(() -> new RuntimeException("Pet not found"));

@@ -20,6 +20,7 @@ public class Appointment {
     String time;
     String ownerName;
     String veterinarian;
+    Integer isConfirmed;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "idPet")

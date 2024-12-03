@@ -13,6 +13,7 @@ public class AppointmentResponse {
     String time;
     String ownerName;
     String veterinarian;
+    Integer isConfirmed;
     PetIdDTO pet;
     VetUserIdDTO vetUser;
 }

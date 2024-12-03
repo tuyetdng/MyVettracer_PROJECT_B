@@ -139,6 +139,7 @@
             let roles = ['VET_USER'];
 
             const payload = {
+                img: document.getElementById("new_img").value || "",
                 userName: document.getElementById("new_userName").value,
                 fullName: document.getElementById("new_fullName").value,
                 email: document.getElementById("new_email").value,
@@ -193,18 +194,20 @@
 
             var row = button.parentNode.parentNode;
             var idVetUser = row.cells[1].innerText;
-            var userName = row.cells[2].innerText;
-            var fullName = row.cells[3].innerText;
-            var email = row.cells[4].innerText;
-            var phoneNum = row.cells[5].innerText;
-            var dob = row.cells[6].innerText;
-            var gender = row.cells[7].innerText;
-            var nameOfConsultingRoom = row.cells[9].innerText;
-            var clinicAddress = row.cells[10].innerText;
-            var qualification = row.cells[11].innerText;
-            var experience = row.cells[12].innerText;
-            var authentication = row.cells[13].innerText;
+            var img = row.cells[2].querySelector('img').src;
+            var userName = row.cells[3].innerText;
+            var fullName = row.cells[4].innerText;
+            var email = row.cells[5].innerText;
+            var phoneNum = row.cells[6].innerText;
+            var dob = row.cells[7].innerText;
+            var gender = row.cells[8].innerText;
+            var nameOfConsultingRoom = row.cells[10].innerText;
+            var clinicAddress = row.cells[11].innerText;
+            var qualification = row.cells[12].innerText;
+            var experience = row.cells[13].innerText;
+            var authentication = row.cells[14].innerText;
 
+            document.getElementById("img").value = img;
             document.getElementById("userName").value = userName;
             document.getElementById("fullName").value = fullName;
             document.getElementById("email").value = email;
@@ -247,6 +250,7 @@
                 qualification: document.getElementById("qualification").value,
                 experience: document.getElementById("experience").value,
                 authentication: document.getElementById("authentication").checked ? 1 : 0,
+                img: document.getElementById("img")?.value || "",
                 roles: roles
 
             };
@@ -356,6 +360,7 @@
                 str += `<tr>
                     <td>${i + 1}</td>
                     <td>${data[i].idVetUser}</td>
+                    <td><img src=${data[i].img} width="200" height="100"></td>
                     <td>${data[i].userName}</td>
                     <td>${data[i].fullName}</td>
                     <td>${data[i].email}</td>
@@ -564,6 +569,7 @@
                                                 <tr class="bg-primary text-white">
                                                     <th>#</th>
                                                     <th>ID</th>
+                                                    <th>Avata</th>
                                                     <th>Username</th>
                                                     <th>Full name</th>
                                                     <th>Email</th>
@@ -665,6 +671,12 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
+                                                        <td colspan="2">
+                                                            <label for="img">Image URL:</label><br>
+                                                            <input type="text" id="img" name="img"><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
                                                         <td>
                                                             <label for="authentication">Authentication</label>
                                                             <input type="checkbox" id="authentication"
@@ -754,10 +766,16 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td  colspan="2">
+                                                        <td colspan="2">
                                                             <label for="new_password">Password</label><br>
                                                             <input type="text" id="new_password" name="new_password"
                                                                 required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <label for="new_img">Image URL:</label><br>
+                                                            <input type="text" id="new_img" name="new_img"><br>
                                                         </td>
                                                     </tr>
                                                     <tr>
