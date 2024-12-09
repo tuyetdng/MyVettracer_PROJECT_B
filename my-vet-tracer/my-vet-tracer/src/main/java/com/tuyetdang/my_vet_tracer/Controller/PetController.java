@@ -29,19 +29,10 @@ public class PetController {
         return apiResponse;
     }
 
-    @GetMapping("/pet-vet/{user_id}")
-    APIResponse<List<PetResponse>> getPetsOfVetUser(@PathVariable int user_id) {
-        return APIResponse.<List<PetResponse>>builder()
-                .result(petService.getPetsOfVetUser(user_id))
-                .build();
-    }
-
-    @GetMapping("/pet-owner/{user_id}")
-    APIResponse<List<PetResponse>> getPetsOfOwnerUser(@PathVariable int user_id) {
-        return APIResponse.<List<PetResponse>>builder()
-                .result(petService.getPetsOfOwnerUser(user_id))
-                .build();
-    }
+//    @GetMapping("/getpets")
+//    List<Pet> getPets() {
+//        return petService.getPets();
+//    }
 
     @GetMapping("/{pet_id}")
     PetResponse getPets(@PathVariable int pet_id) {

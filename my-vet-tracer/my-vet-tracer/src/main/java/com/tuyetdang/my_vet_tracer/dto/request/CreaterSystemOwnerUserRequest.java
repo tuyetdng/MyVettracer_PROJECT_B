@@ -12,7 +12,6 @@ import lombok.experimental.FieldDefaults;
 public class CreaterSystemOwnerUserRequest {
     @Size(min = 3, message = "USERNAME_INVALID")
     String userName;
-    String img;
     String email;
     String phoneNum;
     @Size(min = 5, max = 20, message = "PASSWORD_INVALID")

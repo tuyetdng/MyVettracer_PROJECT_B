@@ -5,7 +5,6 @@ import com.tuyetdang.my_vet_tracer.Service.AuthenticationService;
 import com.tuyetdang.my_vet_tracer.dto.request.AuthenticationRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.IntrospectRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.LogoutRequest;
-import com.tuyetdang.my_vet_tracer.dto.request.RefreshRequest;
 import com.tuyetdang.my_vet_tracer.dto.response.APIResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.AuthenticationResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.IntrospectResponse;
@@ -46,12 +45,5 @@ public class AuthenticationController {
         authenticationService.logout(request);
         return APIResponse.<Void>builder()
                 .build();
-    }
-
-    @PostMapping("/refresh")
-    APIResponse<AuthenticationResponse> authenticate(@RequestBody RefreshRequest request)
-            throws ParseException, JOSEException {
-        var result = authenticationService.refreshToken(request);
-        return APIResponse.<AuthenticationResponse>builder().result(result).build();
     }
 }

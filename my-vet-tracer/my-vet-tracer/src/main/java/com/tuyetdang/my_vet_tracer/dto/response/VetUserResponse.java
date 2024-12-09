@@ -13,7 +13,6 @@ import java.util.Set;
 public class VetUserResponse {
     Integer idVetUser;
     String userName;
-    String img;
     String email;
     String phoneNum;
 //    String password;

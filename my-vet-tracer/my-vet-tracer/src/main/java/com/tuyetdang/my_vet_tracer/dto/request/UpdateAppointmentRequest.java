@@ -10,7 +10,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateAppointmentRequest {
     String time;
-    Integer isConfirmed;
     String ownerName;
     String veterinarian;
 }

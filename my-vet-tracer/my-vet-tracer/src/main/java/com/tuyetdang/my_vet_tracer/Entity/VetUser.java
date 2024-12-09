@@ -19,7 +19,6 @@ public class VetUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idVetUser;
-    String img;
     String userName;
     String email;
     String phoneNum;

@@ -13,7 +13,6 @@ import java.util.Set;
 public class OwnerUserResponse {
     Integer idOwnerUser;
     String userName;
-    String img;
     String email;
     String phoneNum;
 //    String password;

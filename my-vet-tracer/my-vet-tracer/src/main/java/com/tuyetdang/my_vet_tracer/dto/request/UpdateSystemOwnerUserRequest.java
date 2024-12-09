@@ -15,7 +15,9 @@ import java.util.List;
 public class UpdateSystemOwnerUserRequest {
     String email;
     String phoneNum;
-    String img;
+//    @Nullable
+//    @Size(min = 5, max = 20, message = "PASSWORD_INVALID")
+//    String password;
     String fullName;
     String dob;
     String gender;

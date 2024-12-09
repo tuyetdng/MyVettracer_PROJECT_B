@@ -123,7 +123,6 @@ Response.AppendHeader("Access-Control-Allow-Origin", "*");
                 veterinarian: document.getElementById("newVeterinarian").value,
                 idPet: document.getElementById("newIdPet").value,
                 idUser: document.getElementById("newIdVet").value,
-                isConfirmed: document.getElementById("newIsConfirmed").checked ? 1 : 0,
             };
 
             try {
@@ -172,14 +171,12 @@ Response.AppendHeader("Access-Control-Allow-Origin", "*");
             var ownerName = row.cells[4].innerText;
             var idPet = row.cells[5].innerText;
             var idVet = row.cells[6].innerText;
-            var isConfirmed = row.cells[7].innerText;
 
             document.getElementById("time").value = time;
             document.getElementById("ownerName").value = ownerName;
             document.getElementById("veterinarian").value = veterinarian;
             document.getElementById("idVet").value = idVet;
             document.getElementById("idPet").value = idPet;
-            document.getElementById("isConfirmed").checked = (isConfirmed === '1');
 
 
             document.getElementById("editButton").onclick = function () {
@@ -193,7 +190,6 @@ Response.AppendHeader("Access-Control-Allow-Origin", "*");
                 time: document.getElementById("time").value,
                 ownerName: document.getElementById("ownerName").value,
                 veterinarian: document.getElementById("veterinarian").value,
-                isConfirmed: document.getElementById("isConfirmed").checked ? 1 : 0,
 
             };
             console.log(key);
@@ -305,7 +301,6 @@ Response.AppendHeader("Access-Control-Allow-Origin", "*");
                     <td>${appointment.ownerName}</td>
                      <td>${petId}</td>
                     <td>${vetUser}</td>
-                    <td>${appointment.isConfirmed}</td>
                     <td>
                         <button class="button-without-background" onclick="editToggleForm(this)"><i class="mdi mdi-table-edit"></i></button>
                         <button class="button-without-background" onclick="deletePostByKey(${data[i].idAppointment})"><i class="mdi mdi-delete-forever" ></i> </i></button>
@@ -513,7 +508,6 @@ Response.AppendHeader("Access-Control-Allow-Origin", "*");
                                                     <th>Owner Name</th>
                                                     <th>Pet ID</th>
                                                     <th>Vet ID</th>
-                                                    <th>Comfirmed</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -560,13 +554,7 @@ Response.AppendHeader("Access-Control-Allow-Origin", "*");
                                                             <input type="text" id="time" name="time" required><br>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <label for="isConfirmed">Comfirmed</label>
-                                                            <input type="checkbox" id="isConfirmed"
-                                                                name="isConfirmed"><br>
-                                                        </td>
-                                                    </tr>
+
                                                 </table>
 
                                                 <input type="button" id="editButton" value="Edit"
@@ -616,13 +604,7 @@ Response.AppendHeader("Access-Control-Allow-Origin", "*");
                                                         </td>
                                                     </tr>
 
-                                                    <tr>
-                                                        <td>
-                                                            <label for="newIsConfirmed">Comfirmed</label>
-                                                            <input type="checkbox" id="newIsConfirmed"
-                                                                name="newIsConfirmed"><br>
-                                                        </td>
-                                                    </tr>
+
                                                 </table>
                                                 <input type="button" id="addButton" value="Add"
                                                     onclick="AddAppointment()">

@@ -10,7 +10,6 @@ import com.tuyetdang.my_vet_tracer.constant.PredefinedRole;
 import com.tuyetdang.my_vet_tracer.dto.request.CreaterSystemVetUserRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdateSystemVetUserRequest;
 import com.tuyetdang.my_vet_tracer.dto.response.OwnerUserResponse;
-import com.tuyetdang.my_vet_tracer.dto.response.PetResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.VetUserResponse;
 import com.tuyetdang.my_vet_tracer.exception.AppException;
 import com.tuyetdang.my_vet_tracer.exception.ErrorCode;
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -95,6 +93,4 @@ public class VetUserService {
     public void deleteUser(Integer user_id) {
         userRepository.deleteById(user_id);
     }
-
-
 }

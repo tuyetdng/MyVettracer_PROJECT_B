@@ -13,7 +13,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateSystemVetUserRequest {
     String email;
-    String img;
     String phoneNum;
     @Size(min = 5, max = 20, message = "PASSWORD_INVALID")
     String fullName;

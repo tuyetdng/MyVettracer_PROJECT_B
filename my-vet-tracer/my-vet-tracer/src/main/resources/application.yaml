@@ -7,18 +7,23 @@ spring:
   datasource:
     url: "jdbc:mysql://localhost:3306/myvettracer"
     username: root
-    password: 123123123
+    password: 12345678
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
     properties:
       hibernate.format_sql: true
+#  web:
+#    cors:
+#      allowed-origins: "http://localhost:3000"
+#      allowed-methods: "*"
+#      allowed-headers: "*"
+#      allow-credentials: true
+
 
 
 jwt:
   signerKey: "QYfJ0w6aufy3Jaw3zOwIXMCafZm9eRUahVSWPIlBgpgVxNXCYJin7pbsvzhp9ZwX"
-  valid-duration: 3600 # in second
-  refreshable-duration: 36000 # in seconds
 
 
