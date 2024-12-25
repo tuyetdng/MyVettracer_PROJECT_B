@@ -1,11 +1,15 @@
 // ? Screens
 export const SCREENS = {
-    ROOT: "Root",
-    HOME: "Home",
-    PROFILE: "Profile",
-    LOGIN: "Login",
-    APPOINTMENT: "Appointment",
+  ROOT: "Root",
+  HOME: "Home",
+  PET: "Pet",
+  PROFILE: "Profile",
+  LOGIN: "Login",
+  TESTSCREEN: "TestScreen",
+  EDITPROFILE: "EditProfile",
+  REGISTER: "Register",
+  PETDETAIL: "PetDetail",
+  EDITPET: "EditPet",
+  ADDPET: " AddPet",
 
-  
-  };
-  
+};

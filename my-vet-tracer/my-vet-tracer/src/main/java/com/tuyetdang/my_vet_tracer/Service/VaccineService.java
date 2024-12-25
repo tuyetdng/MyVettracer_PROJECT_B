@@ -1,5 +1,6 @@
 package com.tuyetdang.my_vet_tracer.Service;
 
+import com.tuyetdang.my_vet_tracer.Entity.Medicine;
 import com.tuyetdang.my_vet_tracer.Entity.Pet;
 import com.tuyetdang.my_vet_tracer.Entity.Vaccine;
 import com.tuyetdang.my_vet_tracer.Entity.VetUser;
@@ -9,6 +10,7 @@ import com.tuyetdang.my_vet_tracer.Repository.VaccineRepository;
 import com.tuyetdang.my_vet_tracer.Repository.VetUserRepository;
 import com.tuyetdang.my_vet_tracer.dto.request.CreateVaccineRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdateVaccineRequest;
+import com.tuyetdang.my_vet_tracer.dto.response.MedicineResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.VaccineResponse;
 import com.tuyetdang.my_vet_tracer.exception.AppException;
 import com.tuyetdang.my_vet_tracer.exception.ErrorCode;
@@ -29,7 +31,7 @@ public class VaccineService {
     PetRepository petRepository;
     VaccineMapper vaccineMapper;
 
-    public Vaccine createVaccine(CreateVaccineRequest request) {
+    public VaccineResponse createVaccine(CreateVaccineRequest request) {
         VetUser vetUser = vetUserRepository.findById(request.getIdUser())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -41,7 +43,7 @@ public class VaccineService {
         vaccine.setVetUser(vetUser);
         vaccine.setPet(pet);
 
-        return vaccineRepository.save(vaccine);
+        return vaccineMapper.toVaccineResponse(vaccine);
     }
 
     public VaccineResponse getVaccines(Integer Id) {
@@ -51,6 +53,22 @@ public class VaccineService {
 
     public List<VaccineResponse> getVaccines() {
         List<Vaccine> vaccines = vaccineRepository.findAll();
+
+        return vaccines.stream()
+                .map(vaccineMapper::toVaccineResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<VaccineResponse> getVaccinesByVetID(Integer idVetUser) {
+        List<Vaccine> vaccines = vaccineRepository.findByVetUser_idVetUser(idVetUser);
+
+        return vaccines.stream()
+                .map(vaccineMapper::toVaccineResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<VaccineResponse> getVaccinesByPetID(Integer idPet) {
+        List<Vaccine> vaccines = vaccineRepository.findByPet_idPet(idPet);
 
         return vaccines.stream()
                 .map(vaccineMapper::toVaccineResponse)

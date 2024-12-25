@@ -1,5 +1,5 @@
-import React from "react";
-import { Alert, View, Text, TextInput, Button, StyleSheet } from "react-native";
+import React, { useMemo, useState } from "react";
+import { Alert, View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { LoginKey } from "../../queries/auth/keys";
 import { useGetUserInfo } from "../../queries/auth/useGetUserInfo";
 import { useLogin } from "../../queries/auth/useLogin";
@@ -12,10 +12,21 @@ import {
   loginFormSchema,
   LoginFormType,
 } from "./helper";
+import createStyles from "./styles"
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
+import { useIsFocused, useTheme } from "@react-navigation/native";
+import * as NavigationService from "react-navigation-helpers";
+import { SCREENS } from "../../shared/constants";
+import { useNavigation } from '@react-navigation/native';
+
 
 const LoginScreen = () => {
   const { setUser, setToken } = useAuthStore();
-  const { data: userinfo, onGetUserInfo } = useGetUserInfo();
+
+  const theme = useTheme();
+  const { colors } = theme;
+  const styles = useMemo(() => createStyles(theme), [theme]);
+  const [showPassword, setShowPassword] = useState(false);
 
   const { onLogin } = useLogin({
     onSuccess: (data) => {
@@ -23,7 +34,8 @@ const LoginScreen = () => {
       console.log("token: " + token);
       Alert.alert("Login Success", "You have successfully logged in", [
         {
-          onPress: () => console.log("OK Pressed"),
+          onPress: () => NavigationService.push(SCREENS.ROOT),
+
         },
       ]);
       AsyncStorage.setItem("token", token).catch((error) => {
@@ -31,12 +43,6 @@ const LoginScreen = () => {
       });
       setToken(token);
 
-      if (token) {
-        onGetUserInfo().catch((error) => {
-          console.error("Failed to get user info:", error);
-        });
-        console.log("🚀 ~ LoginScreen ~ userinfo:", userinfo);
-      }
     },
     onError: (error) => {
       console.error("Login failed:", error);
@@ -62,7 +68,13 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Image
+        source={require('../../../assets/images/logo_loginscreen_2.jpg')}
+        style={styles.image}
+      />
+
+      <Text style={styles.subheader}>Welcome back!</Text>
+      <Text style={styles.description}>You’ve been missed</Text>
 
       <Controller
         name={LoginKey.USERNAME}
@@ -72,58 +84,59 @@ const LoginScreen = () => {
             style={styles.input}
             onChangeText={field.onChange}
             value={field.value}
-            placeholder="Email"
+            placeholder="Username"
+            placeholderTextColor="#000"
           />
         )}
       />
       {errors.userName && <Text style={styles.error}>{errors.userName.message}</Text>}
 
-      <Controller
-        name={LoginKey.PASSWORD}
-        control={control}
-        render={({ field }) => (
-          <TextInput
-            style={styles.input}
-            onChangeText={field.onChange}
-            value={field.value}
-            placeholder="Password"
-            secureTextEntry
-          />
-        )}
-      />
-      {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
+      <View style={styles.inputContainer}>
+        <Controller
+          name={LoginKey.PASSWORD}
+          control={control}
+          render={({ field }) => (
+            <TextInput
+              style={{ flex: 1 }}
+              onChangeText={field.onChange}
+              value={field.value}
+              placeholder="Password"
+              secureTextEntry={!showPassword}
+              placeholderTextColor="#000"
+            />
+          )}
+        />
+        {errors.password && <Text style={styles.error}>{errors.password.message}</Text>}
 
-      <Button title="Login" onPress={handleSubmit(onSubmit)} color="#6200EE" />
+        <TouchableOpacity
+          style={[styles.passwordToggle, { marginLeft: 10 }]} // Khoảng cách giữa TextInput và icon
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <Icon
+            name={showPassword ? "eye-with-line" : "eye"}
+            size={24}
+            color="#EF506B"
+            type={IconType.Entypo}
+          />
+        </TouchableOpacity>
+      </View>
+
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit(onSubmit)} >
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => {
+        NavigationService.push(SCREENS.REGISTER);
+      }}  >
+        <Text style={styles.signupText}>
+          Don't have an account? <Text style={styles.signupLink}>Sign up</Text>
+        </Text>
+      </TouchableOpacity>
+
+
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-    backgroundColor: "#f5f5f5",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 24,
-  },
-  input: {
-    width: "80%",
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    marginBottom: 16,
-    backgroundColor: "#fff",
-  },
-  error: {
-    color: "red",
-    marginBottom: 8,
-  },
-});
 
 export default LoginScreen;

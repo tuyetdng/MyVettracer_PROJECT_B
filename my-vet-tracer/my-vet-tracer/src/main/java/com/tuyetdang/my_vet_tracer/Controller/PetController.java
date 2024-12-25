@@ -5,7 +5,9 @@ import com.tuyetdang.my_vet_tracer.Service.PetService;
 import com.tuyetdang.my_vet_tracer.dto.request.CreatePetRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdatePetRequest;
 import com.tuyetdang.my_vet_tracer.dto.response.APIResponse;
+import com.tuyetdang.my_vet_tracer.dto.response.OwnerUserResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.PetResponse;
+import com.tuyetdang.my_vet_tracer.dto.response.VetUserResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +25,10 @@ public class PetController {
     PetService petService;
 
     @PostMapping()
-    APIResponse<Pet> createPet(@RequestBody @Valid CreatePetRequest request) {
-        APIResponse<Pet> apiResponse = new APIResponse<>();
-        apiResponse.setResult(petService.createPet(request));
-        return apiResponse;
+    APIResponse<PetResponse> createPet(@RequestBody @Valid CreatePetRequest request) {
+        return APIResponse.<PetResponse>builder()
+                .result(petService.createPet(request))
+                .build();
     }
 
     @GetMapping("/pet-vet/{user_id}")
@@ -43,19 +45,40 @@ public class PetController {
                 .build();
     }
 
+    //
+    @GetMapping("/pet-ownerpet/{pet_id}")
+    APIResponse<OwnerUserResponse> getOwnerUserByIdPet(@PathVariable int pet_id) {
+        return APIResponse.<OwnerUserResponse>builder()
+                .result(petService.getOwnerUserByIdPet(pet_id))
+                .build();
+    }
+
+    @GetMapping("/pet-vetpet/{pet_id}")
+    APIResponse<VetUserResponse> getVetUserByIdPet(@PathVariable int pet_id) {
+        return APIResponse.<VetUserResponse>builder()
+                .result(petService.getVetUserByIdPet(pet_id))
+                .build();
+    }
+
     @GetMapping("/{pet_id}")
-    PetResponse getPets(@PathVariable int pet_id) {
-        return petService.getPets(pet_id);
+    APIResponse<PetResponse> getPets(@PathVariable int pet_id) {
+        return APIResponse.<PetResponse>builder()
+                .result(petService.getPets(pet_id))
+                .build();
     }
 
     @GetMapping()
-    public List<PetResponse> getPets() {
-        return petService.getPets();
+    public APIResponse<List<PetResponse>> getPets() {
+        return APIResponse.<List<PetResponse>>builder()
+                .result(petService.getPets())
+                .build();
     }
 
     @PutMapping("/{pet_id}")
-    PetResponse updateUser(@PathVariable Integer pet_id, @RequestBody @Valid UpdatePetRequest request) {
-        return petService.updatePet(pet_id, request);
+    APIResponse<PetResponse> updateUser(@PathVariable Integer pet_id, @RequestBody @Valid UpdatePetRequest request) {
+        return APIResponse.<PetResponse>builder()
+                .result(petService.updatePet(pet_id, request))
+                .build();
     }
 
     //    @DeleteMapping("/deletepet/{pet_id}")

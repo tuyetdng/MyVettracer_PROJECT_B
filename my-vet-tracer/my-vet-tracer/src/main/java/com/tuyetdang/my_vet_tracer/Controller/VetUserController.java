@@ -26,20 +26,24 @@ public class VetUserController {
     VetUserService userService;
 
     @PostMapping()
-    APIResponse<VetUser> createUser(@RequestBody @Valid CreaterSystemVetUserRequest request) {
-        APIResponse<VetUser> apiResponse = new APIResponse<>();
-        apiResponse.setResult(userService.createUser(request));
-        return apiResponse;
+    APIResponse<VetUserResponse> createUser(@RequestBody @Valid CreaterSystemVetUserRequest request) {
+        return APIResponse.<VetUserResponse>builder()
+                .result(userService.createUser(request))
+                .build();
     }
 
     @GetMapping()
-    List<VetUserResponse> getUsers() {
-        return userService.getUsers();
+    APIResponse<List<VetUserResponse>> getUsers() {
+        return APIResponse.<List<VetUserResponse>>builder()
+                .result(userService.getUsers())
+                .build();
     }
 
     @GetMapping("/{user_id}")
-    VetUserResponse getUsers(@PathVariable int user_id) {
-        return userService.getUsers(user_id);
+    APIResponse<VetUserResponse> getUsers(@PathVariable int user_id) {
+        return APIResponse.<VetUserResponse>builder()
+                .result(userService.getUsers(user_id))
+                .build();
     }
 
     @GetMapping("/myinfo")
@@ -51,8 +55,10 @@ public class VetUserController {
 
 
     @PutMapping("/{user_id}")
-    VetUserResponse updateUser(@PathVariable Integer user_id, @RequestBody @Valid UpdateSystemVetUserRequest request) {
-        return userService.updateUser(user_id, request);
+    APIResponse<VetUserResponse> updateUser(@PathVariable Integer user_id, @RequestBody @Valid UpdateSystemVetUserRequest request) {
+        return APIResponse.<VetUserResponse>builder()
+                .result(userService.updateUser(user_id, request))
+                .build();
     }
 
     @DeleteMapping("/{user_id}")

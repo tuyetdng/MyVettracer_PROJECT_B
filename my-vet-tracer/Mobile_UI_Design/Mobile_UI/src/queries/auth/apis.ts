@@ -1,7 +1,7 @@
 // import { VITE_BASE_URL } from "@env";
 import { useHttpPrivateRequest } from "../../services/httpRequest/useHttpPrivateRequest";
 import useHttpPublicRequest from "../../services/httpRequest/useHttpPublicRequest ";
-import { LoginPayload } from "./types";
+import { LoginPayload, OwnerPayload } from "./types";
 
 const useApi = () => {
   const publicApi = useHttpPublicRequest("http://10.0.2.2:8080/myvettracer");
@@ -23,10 +23,20 @@ const useApi = () => {
     return publicApi.post("/auth/refresh");
   };
 
+  //register method
+  const registerOwner = (payload: LoginPayload) => {
+    return publicApi.post("/owneruser", payload);
+  };
+  const registerVet = (payload: LoginPayload) => {
+    return publicApi.post("/vetuser", payload);
+  };
+
   return {
     authenticate,
     getUserInfo,
     getRefreshToken,
+    registerOwner,
+    registerVet,
   };
 };
 

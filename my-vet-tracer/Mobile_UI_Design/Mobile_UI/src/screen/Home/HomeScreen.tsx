@@ -1,77 +1,68 @@
 import React, { useMemo } from "react";
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
-// import Text from "../../shared/components/text-wrapper/TextWrappers";
+import { StyleSheet, View, Text, FlatList, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useTheme } from "@react-navigation/native";
-// import createStyles from "./HomeScreen.style";
+import createStyles from "./HomeScreen.style";
 import { useGetUserInfo } from "../../queries/auth/useGetUserInfo";
-import { OwnerUser } from "../../zustand/auth/types";
+import { useGetListPets } from "../../queries/pet/useGetPets";
+import { useGetAppointmentByPet, useGetAppointmentsByPets } from "../../queries/appoinment/useGetAppointmentByPet";
+import { useGetMedicinesByPets } from "../../queries/medicine/useGetMedicineByPet";
+import { useGetVaccinesByPets } from "../../queries/vaccine/useGetVaccineByPet";
+import { PetResponseType } from "../../queries/pet/types";
+import * as NavigationService from "react-navigation-helpers";
+import { SCREENS } from "../../shared/constants";
+import Icon, { IconType } from "react-native-dynamic-vector-icons";
 
+interface PetScreenProps {
+  route: any;
+  pets: PetResponseType;
+}
 const HomeScreen: React.FC = () => {
   const theme = useTheme();
   const { colors } = theme;
-  // const styles = useMemo(() => createStyles(theme), [theme]);
-  const { data } = useGetUserInfo();
-  if (!data) {
+  const styles = useMemo(() => createStyles(theme), [theme]);
+
+  const { data: owner } = useGetUserInfo();
+  if (!owner) {
     return <Text>Loading or Error: No user info available</Text>;
   }
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-    <Image source={{ uri: data.img }} style={styles.avatar} />
-    <Text style={styles.name}>{data.userName}</Text>
-    <Text style={styles.detail}>Full Name: {data.fullName}</Text>
-    <Text style={styles.detail}>Email: {data.email}</Text>
-    <Text style={styles.detail}>Phone: {data.phoneNum}</Text>
-    <Text style={styles.detail}>Date of Birth: {data.dob}</Text>
-    <Text style={styles.detail}>Gender: {data.gender}</Text>
-    <Text style={styles.detail}>Number of Pets: {data.numOfPet}</Text>
 
-   
-  </ScrollView>
+  const { data: pets, isFetching: isFetchingPets } = useGetListPets(owner.idOwnerUser);
+
+  if (isFetchingPets) {
+    return <Text>Loading...</Text>;
+  }
+  const handleItemPress = (id: number) => {
+    NavigationService.push(SCREENS.PETDETAIL, { idPet: id });
+  };
+  const handleAddPress = () => {
+    NavigationService.push(SCREENS.ADDPET);
+  };
+  const renderItem = ({ item }: { item: PetResponseType }) => (
+    <TouchableOpacity style={styles.card} onPress={() => handleItemPress(item?.idPet)}>
+      <Image source={{ uri: item?.img }} style={styles.petImage}/>
+      <Text style={styles.petName}>{item?.petName} || 🐾 </Text>
+    </TouchableOpacity>
+  );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>My Pets</Text>
+      <FlatList
+        data={pets}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.idPet.toString()}
+        numColumns={2}
+        columnWrapperStyle={styles.row}
+        contentContainerStyle={styles.listContainer}
+      /> 
+      <TouchableOpacity style={styles.cardAdd} onPress={() => handleAddPress()}>
+        <Text style={styles.addIcon}>Add New Pet</Text>
+        
+      </TouchableOpacity>
+    </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    padding: 20,
-    alignItems: "center",
-    backgroundColor: "#f4f4f4",
-  },
-  avatar: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 20,
-  },
-  name: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  detail: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginTop: 20,
-  },
-  roleContainer: {
-    marginTop: 10,
-    alignSelf: "stretch",
-    backgroundColor: "#e8e8e8",
-    padding: 10,
-    borderRadius: 5,
-  },
-  roleName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-  },
-  permission: {
-    fontSize: 14,
-    marginLeft: 10,
-    color: "#555",
-  },
-});
+
+
+
 export default HomeScreen;

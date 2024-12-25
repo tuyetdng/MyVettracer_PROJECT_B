@@ -5,6 +5,7 @@ import com.tuyetdang.my_vet_tracer.Service.OwnerUserService;
 import com.tuyetdang.my_vet_tracer.dto.request.CreaterSystemOwnerUserRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdateSystemOwnerUserRequest;
 import com.tuyetdang.my_vet_tracer.dto.response.APIResponse;
+import com.tuyetdang.my_vet_tracer.dto.response.AppointmentResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.OwnerUserResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -24,23 +25,27 @@ public class OwnerUserController {
     OwnerUserService userService;
 
     @PostMapping()
-    APIResponse<OwnerUser> createUser(@RequestBody @Valid CreaterSystemOwnerUserRequest request) {
-        APIResponse<OwnerUser> apiResponse = new APIResponse<>();
-        apiResponse.setResult(userService.createUser(request));
-        return apiResponse;
+    APIResponse<OwnerUserResponse> createUser(@RequestBody @Valid CreaterSystemOwnerUserRequest request) {
+        return APIResponse.<OwnerUserResponse>builder()
+                .result(userService.createUser(request))
+                .build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
-    List<OwnerUserResponse> getUsers() {
+    APIResponse<List<OwnerUserResponse>> getUsers() {
 
-        return userService.getUsers();
+        return APIResponse.<List<OwnerUserResponse>>builder()
+                .result(userService.getUsers())
+                .build();
     }
 
     @GetMapping("/{user_id}")
-    OwnerUserResponse getUsers(@PathVariable int user_id) {
+    APIResponse<OwnerUserResponse> getUsers(@PathVariable int user_id) {
 
-        return userService.getUsers(user_id);
+        return APIResponse.<OwnerUserResponse>builder()
+                .result(userService.getUsers(user_id))
+                .build();
     }
 
     @GetMapping("/myinfo")
@@ -51,8 +56,10 @@ public class OwnerUserController {
     }
 
     @PutMapping("/{user_id}")
-    OwnerUserResponse updateUser(@PathVariable Integer user_id, @RequestBody @Valid UpdateSystemOwnerUserRequest request) {
-        return userService.updateUser(user_id, request);
+    APIResponse<OwnerUserResponse> updateUser(@PathVariable Integer user_id, @RequestBody @Valid UpdateSystemOwnerUserRequest request) {
+        return APIResponse.<OwnerUserResponse>builder()
+                .result(userService.updateUser(user_id, request))
+                .build();
     }
 
     @DeleteMapping("/{user_id}")

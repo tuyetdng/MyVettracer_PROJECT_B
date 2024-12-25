@@ -3,13 +3,17 @@ package com.tuyetdang.my_vet_tracer.Service;
 import com.tuyetdang.my_vet_tracer.Entity.OwnerUser;
 import com.tuyetdang.my_vet_tracer.Entity.Pet;
 import com.tuyetdang.my_vet_tracer.Entity.VetUser;
+import com.tuyetdang.my_vet_tracer.Mapper.OwnerUserMapper;
 import com.tuyetdang.my_vet_tracer.Mapper.PetMapper;
+import com.tuyetdang.my_vet_tracer.Mapper.VetUserMapper;
 import com.tuyetdang.my_vet_tracer.Repository.OwnerUserRepository;
 import com.tuyetdang.my_vet_tracer.Repository.PetRepository;
 import com.tuyetdang.my_vet_tracer.Repository.VetUserRepository;
 import com.tuyetdang.my_vet_tracer.dto.request.CreatePetRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdatePetRequest;
+import com.tuyetdang.my_vet_tracer.dto.response.OwnerUserResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.PetResponse;
+import com.tuyetdang.my_vet_tracer.dto.response.VetUserResponse;
 import com.tuyetdang.my_vet_tracer.exception.AppException;
 import com.tuyetdang.my_vet_tracer.exception.ErrorCode;
 import lombok.AccessLevel;
@@ -28,8 +32,10 @@ public class PetService {
     OwnerUserRepository ownerUserRepository;
     VetUserRepository vetUserRepository;
     PetMapper petMapper;
+    OwnerUserMapper ownerUserMapper;
+    VetUserMapper vetUserMapper;
 
-    public Pet createPet(CreatePetRequest request) {
+    public PetResponse createPet(CreatePetRequest request) {
         VetUser vetUser = vetUserRepository.findById(request.getIdVetUser())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -40,7 +46,7 @@ public class PetService {
 
         pet.setVetUser(vetUser);
         pet.setOwnerUser(ownerUser);
-        return petRepository.save(pet);
+        return petMapper.toUserResponse(pet);
 
     }
 
@@ -71,6 +77,23 @@ public class PetService {
         return pets.stream()
                 .map(petMapper::toUserResponse)
                 .collect(Collectors.toList());
+    }
+
+//
+    public OwnerUserResponse getOwnerUserByIdPet(Integer idPet) {
+        OwnerUser ownerUser = petRepository.findOwnerUserByIdPet(idPet)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+
+        return ownerUserMapper.toUserResponse(ownerUser);
+    }
+
+    public VetUserResponse getVetUserByIdPet(Integer idPet) {
+        VetUser vetUser = petRepository.findVetUserByIdPet(idPet)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+
+        return vetUserMapper.toUserResponse(vetUser);
     }
 
     public PetResponse updatePet(Integer pet_id, UpdatePetRequest request) {

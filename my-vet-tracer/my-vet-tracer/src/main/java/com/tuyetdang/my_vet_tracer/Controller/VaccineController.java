@@ -8,6 +8,7 @@ import com.tuyetdang.my_vet_tracer.dto.request.CreateVaccineRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdatePetRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdateVaccineRequest;
 import com.tuyetdang.my_vet_tracer.dto.response.APIResponse;
+import com.tuyetdang.my_vet_tracer.dto.response.MedicineResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.PetResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.VaccineResponse;
 import jakarta.validation.Valid;
@@ -27,25 +28,44 @@ public class VaccineController {
     VaccineService vaccineService;
 
     @PostMapping()
-    APIResponse<Vaccine> createVaccine(@RequestBody @Valid CreateVaccineRequest request) {
-        APIResponse<Vaccine> apiResponse = new APIResponse<>();
-        apiResponse.setResult(vaccineService.createVaccine(request));
-        return apiResponse;
+    APIResponse<VaccineResponse> createVaccine(@RequestBody @Valid CreateVaccineRequest request) {
+        return APIResponse.<VaccineResponse>builder()
+                .result(vaccineService.createVaccine(request))
+                .build();
     }
 
     @GetMapping("/{vac_id}")
-    VaccineResponse getVaccines(@PathVariable int vac_id) {
-        return vaccineService.getVaccines(vac_id);
+    APIResponse<VaccineResponse> getVaccines(@PathVariable int vac_id) {
+        return  APIResponse.<VaccineResponse>builder()
+                .result(vaccineService.getVaccines(vac_id))
+                .build();
     }
 
     @GetMapping()
-    public List<VaccineResponse> getVaccines() {
-        return vaccineService.getVaccines();
+    public  APIResponse<List<VaccineResponse>> getVaccines() {
+        return  APIResponse.<List<VaccineResponse>>builder()
+                .result(vaccineService.getVaccines())
+                .build();
     }
 
+    @GetMapping("/vet-vac/{user_id}")
+    APIResponse<List<VaccineResponse>> getVaccinesByVetID(@PathVariable int user_id) {
+        return APIResponse.<List<VaccineResponse>>builder()
+                .result(vaccineService.getVaccinesByVetID(user_id))
+                .build();
+    }
+
+    @GetMapping("/pet-vac/{idPet}")
+    APIResponse<List<VaccineResponse>> getVaccinesByPetID(@PathVariable int idPet) {
+        return APIResponse.<List<VaccineResponse>>builder()
+                .result(vaccineService.getVaccinesByPetID(idPet))
+                .build();
+    }
     @PutMapping("/{vac_id}")
-    VaccineResponse updateVaccine(@PathVariable Integer vac_id, @RequestBody @Valid UpdateVaccineRequest request) {
-        return vaccineService.updateVaccine(vac_id, request);
+    APIResponse<VaccineResponse>  updateVaccine(@PathVariable Integer vac_id, @RequestBody @Valid UpdateVaccineRequest request) {
+        return  APIResponse.<VaccineResponse>builder()
+                .result(vaccineService.updateVaccine(vac_id, request))
+                .build();
     }
 
     @DeleteMapping("/{vac_id}")

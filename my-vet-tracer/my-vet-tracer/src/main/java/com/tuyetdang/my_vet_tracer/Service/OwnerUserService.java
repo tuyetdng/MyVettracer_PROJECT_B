@@ -38,7 +38,7 @@ public class OwnerUserService {
 
     PasswordEncoder passwordEncoder;
 
-    public OwnerUser createUser(CreaterSystemOwnerUserRequest request) {
+    public OwnerUserResponse createUser(CreaterSystemOwnerUserRequest request) {
         if (userRepository.existsByUserName(request.getUserName())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
@@ -56,7 +56,7 @@ public class OwnerUserService {
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        return userRepository.save(user);
+        return userMapper.toUserResponse(user);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

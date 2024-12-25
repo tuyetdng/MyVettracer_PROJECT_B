@@ -39,7 +39,7 @@ public class VetUserService {
     RoleRepository roleRepository;
     PasswordEncoder passwordEncoder;
 
-    public VetUser createUser(CreaterSystemVetUserRequest request) {
+    public VetUserResponse createUser(CreaterSystemVetUserRequest request) {
         if (userRepository.existsByUserName(request.getUserName())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
@@ -55,10 +55,10 @@ public class VetUserService {
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        return userRepository.save(user);
+        return userMapper.toUserResponse(user);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public List<VetUserResponse> getUsers() {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }

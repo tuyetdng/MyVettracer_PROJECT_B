@@ -24,6 +24,9 @@ export const palette = {
   dynamicBackground: "#fff",
   transparent: "transparent",
   calpyse: "#2b7488",
+  regisColorText: "FEB7C3",
+  regisColorButton: "FFAEBC",
+
 };
 
 export const LightTheme: Theme  = {

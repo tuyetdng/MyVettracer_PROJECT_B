@@ -6,6 +6,8 @@ import com.tuyetdang.my_vet_tracer.dto.request.CreateAppointmentRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdateAppointmentRequest;
 import com.tuyetdang.my_vet_tracer.dto.response.APIResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.AppointmentResponse;
+import com.tuyetdang.my_vet_tracer.dto.response.OwnerUserResponse;
+import com.tuyetdang.my_vet_tracer.dto.response.PetResponse;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,25 +25,52 @@ public class AppointmentController {
     AppointmentService appointmentService;
 
     @PostMapping()
-    APIResponse<Appointment> createAppointment(@RequestBody @Valid CreateAppointmentRequest request) {
-        APIResponse<Appointment> apiResponse = new APIResponse<>();
-        apiResponse.setResult(appointmentService.createAppointment(request));
-        return apiResponse;
+    APIResponse<AppointmentResponse> createAppointment(@RequestBody @Valid CreateAppointmentRequest request) {
+        return APIResponse.<AppointmentResponse>builder()
+                .result(appointmentService.createAppointment(request))
+                .build();
     }
 
     @GetMapping("/{app_id}")
-    AppointmentResponse getAppointments(@PathVariable int app_id) {
-        return appointmentService.getAppointments(app_id);
+    APIResponse<AppointmentResponse> getAppointments(@PathVariable int app_id) {
+        return APIResponse.<AppointmentResponse>builder()
+                .result(appointmentService.getAppointments(app_id))
+                .build();
     }
 
     @GetMapping()
-    public List<AppointmentResponse> getAppointments() {
-        return appointmentService.getAppointments();
+    public APIResponse<List<AppointmentResponse>> getAppointments() {
+        return APIResponse.<List<AppointmentResponse>>builder()
+                .result(appointmentService.getAppointments())
+                .build();
+    }
+
+    @GetMapping("/isconfirmed/{user_id}")
+    APIResponse<List<AppointmentResponse>> getIsConfirmedAppointmentsByVetID(@PathVariable int user_id) {
+        return APIResponse.<List<AppointmentResponse>>builder()
+                .result(appointmentService.getIsConfirmedAppointmentsByVetID(user_id))
+                .build();
+    }
+
+    @GetMapping("/notconfirmed/{user_id}")
+    APIResponse<List<AppointmentResponse>> getIsNotConfirmedAppointmentsByVetID(@PathVariable int user_id) {
+        return APIResponse.<List<AppointmentResponse>>builder()
+                .result(appointmentService.getIsNotConfirmedAppointmentsByVetID(user_id))
+                .build();
+    }
+
+    @GetMapping("/pet-app/{idPet}")
+    APIResponse<List<AppointmentResponse>> getAppointmentsByPetID(@PathVariable int idPet) {
+        return APIResponse.<List<AppointmentResponse>>builder()
+                .result(appointmentService.getAppointmentsByPetID(idPet))
+                .build();
     }
 
     @PutMapping("/{app_id}")
-    AppointmentResponse updateAppointment(@PathVariable Integer app_id, @RequestBody @Valid UpdateAppointmentRequest request) {
-        return appointmentService.updateAppointment(app_id, request);
+    APIResponse<AppointmentResponse> updateAppointment(@PathVariable Integer app_id, @RequestBody @Valid UpdateAppointmentRequest request) {
+        return  APIResponse.<AppointmentResponse>builder()
+                .result(appointmentService.updateAppointment(app_id, request))
+                .build();
     }
 
     @DeleteMapping("/{app_id}")

@@ -21,18 +21,27 @@ public class PathConstant {
     public static final String[] PUBLIC_GET_ENDPOINTS = {
             OWNER_USER,
             OWNER_USER + "/user_id",
-            VET_USER,
+//            VET_USER,
             VET_USER + "/user_id",
             PET,
             PET + "/{pet_id}",
             PET + "/pet-vet/{user_id}", //get pets by vetID
             PET + "/pet-owner/{user_id}", //get pets by ownerID
+            PET + "/pet-ownerpet/{pet_id}", //get owner of pet by petid
+            PET + "/pet-vetpet/{pet_id}", //get vet of pet by petid
             APPOINTMENT,
             APPOINTMENT + "/{app_id}",
+            APPOINTMENT + "/isconfirmed/{user_id}",// by vetID
+            APPOINTMENT + "/notconfirmed/{user_id}",// by vetID
+            APPOINTMENT + "/pet-app/{idPet}",// by petID
             MEDICINE,
             MEDICINE + "/{mec_id}",
+            MEDICINE + "/vet-med/{user_id}",// by vetID
+            MEDICINE + "/pet-med/{idPet}",// by petID
             VACCINE,
-            VACCINE + "/{vac_id}"
+            VACCINE + "/{vac_id}",
+            VACCINE + "/vet-vac/{user_id}",// by vetID
+            VACCINE + "/pet-vac/{idPet}",// by petID
     };
 
     public static final String[] PUBLIC_POST_ENDPOINTS = {

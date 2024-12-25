@@ -54,7 +54,7 @@ export const useHttpPrivateRequest = (baseURL: string): AxiosInstance => {
           // If refresh token is successful, update the access token
           if (refreshResponse.data.code === 1000 && refreshResponse.data.result.token) {
             const newToken = refreshResponse.data.result.token;
-            await AsyncStorage.setItem("accessToken", newToken);
+            await AsyncStorage.setItem("token", newToken);
 
             // Retry the original request with the new token
             originalRequest.headers["Authorization"] = `Bearer ${newToken}`;

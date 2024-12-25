@@ -10,9 +10,13 @@ import { isReadyRef, navigationRef } from "react-navigation-helpers";
 import { DarkTheme, LightTheme, palette } from "../shared/theme/themes";
 import { SCREENS } from "../shared/constants";
 import HomeScreen from "../screen/Home/HomeScreen";
-import ProfileScreen from "../screen/Setting/ProfileScreenScreen";
+import ProfileScreen from "../screen/Setting/ProfileScreen";
 import LoginScreen from "../screen/Login/LoginScreen";
-import AppointmentScreen from "../screen/Appointment/AppointmentScreen";
+import TestScreen from "../screen/Test/TestScreen";
+import RegisterScreen from "../screen/register/RegisterScreen";
+import PetDetailScreen from "../screen/pet/PetDetailScreen";
+import EditPetScreen from "../screen/pet/PetEditScreen";
+import AddPetScreen from "../screen/pet/PetAddScreen";
 
 
 // ? If you want to use stack or tab or both
@@ -38,7 +42,7 @@ const Navigation = () => {
             case SCREENS.HOME:
                 iconName = focused ? "home" : "home-outline";
                 break;
-            case SCREENS.APPOINTMENT:
+            case SCREENS.TESTSCREEN:
                 iconName = focused ? "calendar" : "calendar-clear-outline";
                 break;
             case SCREENS.LOGIN:
@@ -79,17 +83,19 @@ const Navigation = () => {
                     component={HomeScreen}
                 />
                 <Tab.Screen
-                    name={SCREENS.APPOINTMENT}
-                    component={AppointmentScreen}
+                    name={SCREENS.LOGIN}
+                    component={LoginScreen}
+                />
+
+                <Tab.Screen
+                    name={SCREENS.TESTSCREEN}
+                    component={TestScreen}
                 />
                 <Tab.Screen
                     name={SCREENS.PROFILE}
                     component={ProfileScreen}
                 />
-                <Tab.Screen
-                    name={SCREENS.LOGIN}
-                    component={LoginScreen}
-                />
+
 
             </Tab.Navigator>
         );
@@ -104,7 +110,16 @@ const Navigation = () => {
             theme={isDarkMode ? DarkTheme : LightTheme}
         >
             <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name={SCREENS.LOGIN} component={LoginScreen} />
                 <Stack.Screen name={SCREENS.ROOT} component={renderTabNavigation} />
+                <Stack.Screen name={SCREENS.REGISTER} component={RegisterScreen} />
+                <Stack.Screen name={SCREENS.PETDETAIL}>
+                    {(props) => <PetDetailScreen {...props} />}
+                </Stack.Screen>
+                <Stack.Screen name={SCREENS.EDITPET}>
+                    {(props) => <EditPetScreen {...props} />}
+                </Stack.Screen>
+                <Stack.Screen name={SCREENS.ADDPET} component={AddPetScreen} />
 
             </Stack.Navigator>
         </NavigationContainer>

@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class AppointmentService {
     PetRepository petRepository;
     AppointmentMapper appointmentMapper;
 
-    public Appointment createAppointment(CreateAppointmentRequest request) {
+    public AppointmentResponse createAppointment(CreateAppointmentRequest request) {
         VetUser vetUser = vetUserRepository.findById(request.getIdUser())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -41,7 +42,7 @@ public class AppointmentService {
         appointment.setVetUser(vetUser);
         appointment.setPet(pet);
 
-        return appointmentRepository.save(appointment);
+        return appointmentMapper.toAppointmentResponse(appointment);
     }
 
     public AppointmentResponse getAppointments(Integer Id) {
@@ -51,6 +52,48 @@ public class AppointmentService {
 
     public List<AppointmentResponse> getAppointments() {
         List<Appointment> appointments = appointmentRepository.findAll();
+
+        return appointments.stream()
+                .map(appointmentMapper::toAppointmentResponse)
+                .collect(Collectors.toList());
+    }
+
+    //Is confirmed
+    public List<AppointmentResponse> getIsConfirmedAppointmentsByVetID(Integer idVetUser) {
+        List<Appointment> appointments = appointmentRepository.findByVetUser_idVetUser(idVetUser);
+
+        List<Appointment> result = new ArrayList<>();
+
+        for (int i = 0; i < appointments.size(); i++) {
+                if (appointments.get(i).getIsConfirmed() == 1) {
+                    result.add(appointments.get(i));
+                }
+        }
+
+        return result.stream()
+                .map(appointmentMapper::toAppointmentResponse)
+                .collect(Collectors.toList());
+    }
+
+    //Is not confirmed
+    public List<AppointmentResponse> getIsNotConfirmedAppointmentsByVetID(Integer idVetUser) {
+        List<Appointment> appointments = appointmentRepository.findByVetUser_idVetUser(idVetUser);
+
+        List<Appointment> result = new ArrayList<>();
+
+        for (int i = 0; i < appointments.size(); i++) {
+            if (appointments.get(i).getIsConfirmed() == 0) {
+                result.add(appointments.get(i));
+            }
+        }
+
+        return result.stream()
+                .map(appointmentMapper::toAppointmentResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<AppointmentResponse> getAppointmentsByPetID(Integer idPet) {
+        List<Appointment> appointments = appointmentRepository.findByPet_idPet(idPet);
 
         return appointments.stream()
                 .map(appointmentMapper::toAppointmentResponse)

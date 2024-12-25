@@ -1,5 +1,6 @@
 package com.tuyetdang.my_vet_tracer.Service;
 
+import com.tuyetdang.my_vet_tracer.Entity.Appointment;
 import com.tuyetdang.my_vet_tracer.Entity.Medicine;
 import com.tuyetdang.my_vet_tracer.Entity.Pet;
 import com.tuyetdang.my_vet_tracer.Entity.VetUser;
@@ -9,6 +10,7 @@ import com.tuyetdang.my_vet_tracer.Repository.PetRepository;
 import com.tuyetdang.my_vet_tracer.Repository.VetUserRepository;
 import com.tuyetdang.my_vet_tracer.dto.request.CreateMedicineRequest;
 import com.tuyetdang.my_vet_tracer.dto.request.UpdateMedicineRequest;
+import com.tuyetdang.my_vet_tracer.dto.response.AppointmentResponse;
 import com.tuyetdang.my_vet_tracer.dto.response.MedicineResponse;
 import com.tuyetdang.my_vet_tracer.exception.AppException;
 import com.tuyetdang.my_vet_tracer.exception.ErrorCode;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +32,7 @@ public class MedicineService {
     PetRepository petRepository;
     MedicineMapper medicineMapper;
 
-    public Medicine createMedicine(CreateMedicineRequest request) {
+    public MedicineResponse createMedicine(CreateMedicineRequest request) {
         VetUser vetUser = vetUserRepository.findById(request.getIdUser())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -41,7 +44,7 @@ public class MedicineService {
         medicine.setVetUser(vetUser);
         medicine.setPet(pet);
 
-        return medicineRepository.save(medicine);
+        return medicineMapper.toMedicineResponse(medicine);
     }
 
     public MedicineResponse getMedicines(Integer Id) {
@@ -51,6 +54,22 @@ public class MedicineService {
 
     public List<MedicineResponse> getMedicines() {
         List<Medicine> medicines = medicineRepository.findAll();
+
+        return medicines.stream()
+                .map(medicineMapper::toMedicineResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<MedicineResponse> getMedicinesByVetID(Integer idVetUser) {
+        List<Medicine> medicines = medicineRepository.findByVetUser_idVetUser(idVetUser);
+
+        return medicines.stream()
+                .map(medicineMapper::toMedicineResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<MedicineResponse> getMedicinesByPetID(Integer idPet) {
+        List<Medicine> medicines = medicineRepository.findByPet_idPet(idPet);
 
         return medicines.stream()
                 .map(medicineMapper::toMedicineResponse)
