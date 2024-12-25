@@ -18,8 +18,15 @@ interface Style {
   infoItem: TextStyle;
   editButton: ViewStyle;
   editButtonText: TextStyle;
+  section: ViewStyle;
+  sectionTitle: TextStyle;
+  card: ViewStyle;
+  cardImage: ImageStyle;
+  cardDetails: ViewStyle;
+  cardName: TextStyle;
+  cardSubtitle: TextStyle;
+  cardTime: TextStyle;
 }
-
 export default (theme: Theme) => {
   const { colors } = theme;
 
@@ -46,7 +53,7 @@ export default (theme: Theme) => {
       zIndex: 10,
     },
     name: {
-      fontSize: 24, 
+      fontSize: 24,
       fontWeight: "bold",
       color: colors.text,
       marginTop: 14,
@@ -115,5 +122,52 @@ export default (theme: Theme) => {
       color: colors.background,
       fontSize: 16,
     },
+    section: {
+      marginHorizontal: 20,
+      marginTop: 20,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 10,
+    },
+    card: {
+      flexDirection: 'row',
+      backgroundColor: '#fff',
+      padding: 15,
+      borderRadius: 10,
+      shadowColor: '#000',
+      shadowOpacity: 0.1,
+      shadowRadius: 10,
+      elevation: 2,
+      marginBottom: 10,
+    },
+    cardImage: {
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+    },
+    cardDetails: {
+      flex: 1,
+      marginLeft: 15,
+      
+    },
+    cardName: {
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    cardSubtitle: {
+      fontSize: 14,
+      color: '#999',
+    },
+    cardTime: {
+      fontSize: 14,
+      color: '#555',
+    },
+    cardActions: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+
   });
 };

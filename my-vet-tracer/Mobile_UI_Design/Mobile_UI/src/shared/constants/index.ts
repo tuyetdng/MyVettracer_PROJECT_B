@@ -11,5 +11,6 @@ export const SCREENS = {
   PETDETAIL: "PetDetail",
   EDITPET: "EditPet",
   ADDPET: " AddPet",
+  TRACKING : "Tracking",
 
 };

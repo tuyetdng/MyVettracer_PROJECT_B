@@ -7,9 +7,8 @@ import {
   Image,
   ScrollView,
   Alert,
-  
+  FlatList,
 } from "react-native";
-import { Picker } from '@react-native-picker/picker';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -21,8 +20,9 @@ import { useGetListVet } from "../../queries/vet/useGetListVet";
 import { useQueryClient } from "react-query";
 import { API_QUERIES } from "../../queries/keys";
 import * as NavigationService from "react-navigation-helpers";
+import { VetResponseType } from "../../queries/vet/types";
 
-const AddPetScreen: React.FC= () => {
+const AddPetScreen: React.FC = () => {
   const theme = useTheme();
   const { colors } = theme;
   const styles = useMemo(() => createStyles(theme), [theme]);
@@ -63,6 +63,8 @@ const AddPetScreen: React.FC= () => {
     };
 
     try {
+      console.log("Payload:", payload);
+
       const response = await axios.post(
         `http://10.0.2.2:8080/myvettracer/pet`,
         payload,
@@ -75,6 +77,8 @@ const AddPetScreen: React.FC= () => {
       );
 
       if (response.data.code === 1000) {
+        console.log("Response:", response.data);
+
         queryClient.invalidateQueries([API_QUERIES.PET]);
         Alert.alert("Success", "Pet added successfully!", [
           { text: "OK", onPress: () => NavigationService.goBack() },
@@ -90,21 +94,54 @@ const AddPetScreen: React.FC= () => {
       );
     }
   };
+  const handleViewDetails = (vet_id: number) => {
+
+  }
+  const renderVetItem = ({ item }: { item: VetResponseType }) => (
+
+    <TouchableOpacity
+      style={[
+        styles.card,
+        idVetUser === item.idVetUser && styles.selectedCard,
+      ]}
+      onPress={() => setIdVetUser(item.idVetUser)}
+    >
+      <Image source={{ uri: item.img }} style={styles.cardImage} />
+      <View style={styles.cardDetails}>
+        <Text style={styles.cardName}>{item.fullName}</Text>
+        <Text style={styles.cardSubtitle}>{item.nameOfConsultingRoom}</Text>
+        <Text style={styles.cardTime}>📍 {item.clinicAddress}</Text>
+      </View>
+      <TouchableOpacity
+        style={styles.detailButton}
+        onPress={() => handleViewDetails(item.idVetUser)}
+      >
+        <Text style={styles.detailButtonText}>Details</Text>
+      </TouchableOpacity>
+    </TouchableOpacity>
+
+  );
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity onPress={() => NavigationService.goBack()} style={styles.goBackButton}>
-        <Icon
-          name="arrow-back-sharp"
-          type={IconType.Ionicons}
-          color="#000000"
-          size={35}
-        />
-      </TouchableOpacity>
 
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: img }} style={styles.petImage} />
+      <View style={{ flexDirection: "row", marginTop: 24, }}>
+        <TouchableOpacity onPress={() => NavigationService.goBack()} style={styles.goBackButton}>
+          <Icon
+            name="arrow-back-sharp"
+            type={IconType.Ionicons}
+            color="#000000"
+            size={35}
+          />
+        </TouchableOpacity>
+
+        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 70, }}>
+          <Text style={styles.imageContainer}>Add New Pet</Text>
+          <Image source={{ uri: 'https://i.pinimg.com/736x/c9/0b/0d/c90b0db71e33975ab69912ff1a0602e6.jpg' }} style={styles.petImage} />
+
+        </View>
       </View>
+      <View style={{ borderBottomWidth: 1, borderBottomColor: '#5EC088', marginBottom: 20 }} />
 
       <TextInput
         style={styles.input}
@@ -130,15 +167,14 @@ const AddPetScreen: React.FC= () => {
       <TextInput
         style={styles.input}
         placeholder="Age (Months)"
-        keyboardType="numeric"
         value={age}
+        keyboardType="numeric"
         onChangeText={setAge}
       />
 
       <TextInput
         style={styles.input}
         placeholder="Weight (kg)"
-        keyboardType="numeric"
         value={weight}
         onChangeText={setWeight}
       />
@@ -146,7 +182,6 @@ const AddPetScreen: React.FC= () => {
       <TextInput
         style={styles.input}
         placeholder="Height (cm)"
-        keyboardType="numeric"
         value={height}
         onChangeText={setHeight}
       />
@@ -158,17 +193,23 @@ const AddPetScreen: React.FC= () => {
         onChangeText={setIdentification}
       />
 
-      {/* Vet selection */}
-      <Text style={styles.label}>Select Vet</Text>
-      <Picker
-        selectedValue={idVetUser}
-        onValueChange={(itemValue) => setIdVetUser(itemValue)}
-        style={styles.picker}
-      >
-        {vetList?.map((vet: any) => (
-          <Picker.Item key={vet.idVetUser} label={vet.name} value={vet.idVetUser} />
-        ))}
-      </Picker>
+      <TextInput
+        style={styles.input}
+        placeholder="Upload you petie avata"
+        value={img}
+        onChangeText={setImg}
+      />
+
+      <Text style={styles.sectionTitle}>Select Vet</Text>
+      <ScrollView style={{ height: 500 }}>
+        <FlatList
+          data={vetList}
+          renderItem={renderVetItem}
+          keyExtractor={(item) => item.idVetUser.toString()}
+          contentContainerStyle={styles.flatListContainer}
+        />
+
+      </ScrollView>
 
       <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Save Pet</Text>

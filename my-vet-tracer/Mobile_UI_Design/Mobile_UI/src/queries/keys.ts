@@ -3,6 +3,7 @@ export enum API_QUERIES {
     PET = "/pet",
     VETBYPET = "/pet/pet-vetpet",
     VET = "/vetuser",
+    OWNERGETVET = "/vetuser/owner-get-vet",
     APPOINTMENT = "/appointment",
     MEDICINE = "/medicine",
     VACCINE = "/vaccine"

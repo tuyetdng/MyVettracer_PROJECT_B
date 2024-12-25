@@ -23,7 +23,7 @@ public class PermissionService {
     public PermissionResponse create(PermissionRequest request) {
         Permission permission = permissionMapper.toPermission(request);
         permission = permissionRepository.save(permission);
-        return permissionMapper.toPermissionResponse(permission);
+        return permissionMapper.toPermissionResponse(permissionRepository.save(permission));
     }
 
     public List<PermissionResponse> getAll() {

@@ -53,6 +53,19 @@ public class VetUserController {
                 .build();
     }
 
+    @GetMapping("/owner-get-vet")
+    APIResponse<List<VetUserResponse>> getListVets() {
+        return APIResponse.<List<VetUserResponse>>builder()
+                .result(userService.getListVets())
+                .build();
+    }
+
+    @GetMapping("/owner-get-vet/{user_id}")
+    APIResponse<VetUserResponse> getVetByID(@PathVariable int user_id) {
+        return APIResponse.<VetUserResponse>builder()
+                .result(userService.getVetByID(user_id))
+                .build();
+    }
 
     @PutMapping("/{user_id}")
     APIResponse<VetUserResponse> updateUser(@PathVariable Integer user_id, @RequestBody @Valid UpdateSystemVetUserRequest request) {

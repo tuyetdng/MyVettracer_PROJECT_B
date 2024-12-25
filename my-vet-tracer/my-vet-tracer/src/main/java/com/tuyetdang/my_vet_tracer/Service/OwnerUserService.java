@@ -56,7 +56,7 @@ public class OwnerUserService {
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        return userMapper.toUserResponse(user);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

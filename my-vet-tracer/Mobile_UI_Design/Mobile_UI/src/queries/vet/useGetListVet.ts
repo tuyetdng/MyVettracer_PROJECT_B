@@ -22,7 +22,7 @@ export function useGetListVet(
     ApiResponseListType<VetResponseType>,
     Error,
     VetResponseType[]
-  >([API_QUERIES.VET], {
+  >([API_QUERIES.OWNERGETVET], {
     queryFn: () => {
       return responseWrapper<ApiResponseListType<VetResponseType>>(
         vetApi.getListVet,
@@ -36,7 +36,7 @@ export function useGetListVet(
   const queryClient = useQueryClient();
 
   const handleInvalidateListVet = () =>
-    queryClient.invalidateQueries(API_QUERIES.VET);
+    queryClient.invalidateQueries(API_QUERIES.OWNERGETVET);
 
   return {
     data,

@@ -17,6 +17,7 @@ import RegisterScreen from "../screen/register/RegisterScreen";
 import PetDetailScreen from "../screen/pet/PetDetailScreen";
 import EditPetScreen from "../screen/pet/PetEditScreen";
 import AddPetScreen from "../screen/pet/PetAddScreen";
+import TrackingScreen from "../screen/Tracking/TrackingScreen";
 
 
 // ? If you want to use stack or tab or both
@@ -51,6 +52,9 @@ const Navigation = () => {
             case SCREENS.PROFILE:
                 iconName = focused ? "settings" : "settings-outline";
                 break;
+            case SCREENS.TRACKING:
+                iconName = focused ? "fitness" : "fitness-outline";
+                break;
             default:
                 iconName = focused ? "home" : "home-outline";
                 break;
@@ -83,8 +87,8 @@ const Navigation = () => {
                     component={HomeScreen}
                 />
                 <Tab.Screen
-                    name={SCREENS.LOGIN}
-                    component={LoginScreen}
+                    name={SCREENS.TRACKING}
+                    component={TrackingScreen}
                 />
 
                 <Tab.Screen

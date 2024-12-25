@@ -46,7 +46,7 @@ public class PetService {
 
         pet.setVetUser(vetUser);
         pet.setOwnerUser(ownerUser);
-        return petMapper.toUserResponse(pet);
+        return petMapper.toUserResponse(petRepository.save(pet));
 
     }
 

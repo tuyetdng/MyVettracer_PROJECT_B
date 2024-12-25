@@ -21,8 +21,10 @@ public class PathConstant {
     public static final String[] PUBLIC_GET_ENDPOINTS = {
             OWNER_USER,
             OWNER_USER + "/user_id",
-//            VET_USER,
+            VET_USER,
             VET_USER + "/user_id",
+            VET_USER + "/owner-get-vet",
+            VET_USER + "/owner-get-vet/{user_id}",
             PET,
             PET + "/{pet_id}",
             PET + "/pet-vet/{user_id}", //get pets by vetID

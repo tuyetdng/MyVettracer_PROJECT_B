@@ -43,7 +43,7 @@ public class VaccineService {
         vaccine.setVetUser(vetUser);
         vaccine.setPet(pet);
 
-        return vaccineMapper.toVaccineResponse(vaccine);
+        return vaccineMapper.toVaccineResponse(vaccineRepository.save(vaccine));
     }
 
     public VaccineResponse getVaccines(Integer Id) {

@@ -1,6 +1,7 @@
 export interface VetResponseType {
     idVetUser: number;
     userName: string;
+    img: string,
     email: string;
     phoneNum: string;
     fullName: string;

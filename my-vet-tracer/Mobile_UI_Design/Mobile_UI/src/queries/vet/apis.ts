@@ -17,13 +17,16 @@ const useApi = () => {
     return publicApi.post("/auth/refresh");
   };
   const getListVet = () => {
-    return privateApi.get("/vetuser", {});
+    return publicApi.get("/vetuser/owner-get-vet", {});
   };
-
+  const getVetById = (vet_id: number) => {
+    return publicApi.get(`/vetuser/owner-get-vet/${vet_id}`, {});
+};
   return {
     getUserInfo,
     getRefreshToken,
     getListVet,
+    getVetById
   };
 };
 

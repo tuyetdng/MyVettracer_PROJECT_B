@@ -44,7 +44,7 @@ public class MedicineService {
         medicine.setVetUser(vetUser);
         medicine.setPet(pet);
 
-        return medicineMapper.toMedicineResponse(medicine);
+        return medicineMapper.toMedicineResponse(medicineRepository.save(medicine));
     }
 
     public MedicineResponse getMedicines(Integer Id) {

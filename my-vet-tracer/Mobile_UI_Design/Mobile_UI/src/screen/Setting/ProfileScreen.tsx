@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import {
+  FlatList,
   Image,
   ScrollView,
   StyleSheet,
@@ -15,6 +16,7 @@ import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import * as NavigationService from "react-navigation-helpers";
 import { useGetUserInfo } from "../../queries/auth/useGetUserInfo";
 import { SCREENS } from "../../shared/constants";
+import { useGetListPets } from "../../queries/pet/useGetPets";
 
 
 const ProfileScreen: React.FC = () => {
@@ -22,6 +24,8 @@ const ProfileScreen: React.FC = () => {
   const { colors } = theme;
   const styles = useMemo(() => createStyles(theme), [theme]);
   const { data: userinfo, onGetUserInfo } = useGetUserInfo();
+  const { data: pets, isFetching: isFetchingPets } = useGetListPets(userinfo?.idOwnerUser || 0);
+  const petsCount = pets?.length || 0;
 
   const handleItemPress = (id: number) => {
     NavigationService.push(SCREENS.EDITPROFILE, { idOwnerUser: id });
@@ -51,7 +55,7 @@ const ProfileScreen: React.FC = () => {
           <Text style={styles.role}>{userinfo?.userName || "User"}</Text>
           <Text style={styles.location}>
             <Icon name="paw" type={IconType.FontAwesome} size={18} />{" "}
-            {userinfo?.numOfPet || "Opps, you dont have any pet now"}
+            {petsCount || "Opps, you dont have any pet now"}
           </Text>
 
           <Image
@@ -64,19 +68,12 @@ const ProfileScreen: React.FC = () => {
             <View>
               <Text style={styles.iconButton}>
                 <Icon name="phone" type={IconType.FontAwesome} size={20} color="#FF7E5F" />
-                <Text style={{fontSize: 18}}> {"\t"} {userinfo?.phoneNum || "No phone available"}</Text>
+                <Text style={{ fontSize: 18 }}> {"\t"} {userinfo?.phoneNum || "No phone available"}</Text>
               </Text>
             </View>
           </View>
         </LinearGradient>
 
-        {/* About Me Section
-        <View style={styles.aboutSection}>
-          <Text style={styles.aboutTitle}>About Me</Text>
-          <Text style={styles.description}>
-            {userinfo?.Role.name || "No description provided."}
-          </Text>
-        </View> */}
 
         {/* Additional Info */}
         <View style={styles.infoSection}>
@@ -90,7 +87,24 @@ const ProfileScreen: React.FC = () => {
             <Icon name="transgender" type={IconType.FontAwesome} size={18} /> {userinfo?.gender || "Not specified"}
           </Text>
         </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Upcoming Consultation</Text>
+          <FlatList data={pets}
+            renderItem={({ item }) => {
+              return (
+                <View style={styles.card}>
+                  <Image source={{ uri: item.img }} style={styles.cardImage} />
+                  <View style={styles.cardDetails}>
+                    <Text style={styles.cardName}>{item.petName}</Text>
+                    <Text style={styles.cardSubtitle}>{item.petType}</Text>
+                    <Text style={styles.cardTime}>{item.height} || {item.weight}</Text>
 
+                  </View>
+                </View>
+              );
+            }}
+          />
+        </View>
         <TouchableOpacity
           style={styles.editButton}
           onPress={() => {

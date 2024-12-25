@@ -42,7 +42,7 @@ public class AppointmentService {
         appointment.setVetUser(vetUser);
         appointment.setPet(pet);
 
-        return appointmentMapper.toAppointmentResponse(appointment);
+        return appointmentMapper.toAppointmentResponse(appointmentRepository.save(appointment));
     }
 
     public AppointmentResponse getAppointments(Integer Id) {

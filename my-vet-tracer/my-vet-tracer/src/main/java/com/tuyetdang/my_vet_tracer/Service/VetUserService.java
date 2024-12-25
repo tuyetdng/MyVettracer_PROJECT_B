@@ -55,10 +55,10 @@ public class VetUserService {
         } catch (DataIntegrityViolationException exception) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        return userMapper.toUserResponse(user);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<VetUserResponse> getUsers() {
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
@@ -69,6 +69,7 @@ public class VetUserService {
                 .orElseThrow(() -> new RuntimeException("Veterinarian User not found")));
     }
 
+
     public VetUserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();
@@ -76,6 +77,15 @@ public class VetUserService {
         VetUser user = userRepository.findByUserName(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         return userMapper.toUserResponse(user);
+    }
+
+    public List<VetUserResponse> getListVets() {
+        return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
+    }
+
+    public VetUserResponse getVetByID(Integer Id) {
+        return userMapper.toUserResponse(userRepository.findById(Id)
+                .orElseThrow(() -> new RuntimeException("Veterinarian User not found")));
     }
 
 //    @PostAuthorize("returnObject.userName == authentication.name")

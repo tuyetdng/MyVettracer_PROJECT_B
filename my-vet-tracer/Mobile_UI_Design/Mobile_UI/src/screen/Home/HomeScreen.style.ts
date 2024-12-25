@@ -9,6 +9,7 @@ interface Style {
   row: ViewStyle;
   card: ViewStyle;
   petImage: ImageStyle;
+  profileImage: ImageStyle;
   petName: TextStyle;
   addIcon: TextStyle;
   cardAdd: ViewStyle;
@@ -20,15 +21,19 @@ export default (theme: Theme) => {
   return StyleSheet.create<Style>({
     container: {
       flex: 1,
-      backgroundColor: colors.background,
+      backgroundColor: '#ffff',
       padding: 20,
     },
     header: {
-      fontSize: 30,
-      fontWeight: "bold",
+      fontSize: 24,
       color: colors.text,
-      marginBottom: 20,
       marginTop: 20,
+      marginRight: 130,
+    },
+    profileImage: {
+      width: 57,
+      height: 57,
+      borderRadius: 25,
     },
     listContainer: {
       paddingBottom: 20,
@@ -43,15 +48,18 @@ export default (theme: Theme) => {
       borderRadius: 10,
       alignItems: "center",
       justifyContent: "center",
-      elevation: 3,
       backgroundColor: colors.card,
-      shadowColor: "#000",
-      shadowOpacity: 0.1,
-      shadowRadius: 5,
-      shadowOffset: { width: 0, height: 2 },
+      shadowColor: "#000000",
+      shadowOffset: {
+        width: 0,
+        height: 5,
+      },
+      shadowOpacity: 0.20,
+      shadowRadius: 5.62,
+      elevation: 7
     },
     cardAdd: {
-      width: ScreenWidth* 0.9,
+      width: ScreenWidth * 0.9,
       height: 60,
       borderRadius: 20,
       right: 0,
@@ -65,8 +73,8 @@ export default (theme: Theme) => {
       shadowOffset: { width: 0, height: 2 },
     },
     petImage: {
-      width: 60,
-      height: 60,
+      width: 70,
+      height: 70,
       borderRadius: 30,
       marginBottom: 10,
     },
