@@ -5,7 +5,7 @@ import { StyleSheet, View, Text, Image, FlatList, TouchableOpacity,ScrollView } 
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const App = () => {
+const HistoryMedicineScreen = () => {
   const [data, setData] = useState([]);
   const filePath = 'https://dummyjson.com/products';
   useEffect(() => {
@@ -32,12 +32,6 @@ const App = () => {
 
     ;
 
-  const upcomingConsultation = {
-    name: 'Julia Wimmerlin',
-    location: 'Chamberlain',
-    time: '09:40-10:00',
-    image: 'https://png.pngtree.com/thumb_back/fw800/background/20240421/pngtree-beautiful-and-cute-3d-girl-in-chibi-animation-image_15718262.jpg', // Replace with actual image URL
-  };
 
   return (
     <ScrollView style={styles.container}>
@@ -85,33 +79,7 @@ const App = () => {
           }}
         />
       </View>
-
-      {/* Upcoming Consultation Section */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Upcoming Consultation</Text>
-        <FlatList data={data}
-          renderItem={({ item }) => {
-            return (
-              <View style={styles.card}>
-                <Image source={{ uri: upcomingConsultation.image }} style={styles.cardImage} />
-                <View style={styles.cardDetails}>
-                  <Text style={styles.cardName}>{upcomingConsultation.name}</Text>
-                  <Text style={styles.cardSubtitle}>{upcomingConsultation.location}</Text>
-                  <Text style={styles.cardTime}>{upcomingConsultation.time}</Text>
-                </View>
-              </View>
-            );
-          }}
-        />
-        {/* <View style={styles.card}>
-          <Image source={{ uri: upcomingConsultation.image }} style={styles.cardImage} />
-          <View style={styles.cardDetails}>
-            <Text style={styles.cardName}>{upcomingConsultation.name}</Text>
-            <Text style={styles.cardSubtitle}>{upcomingConsultation.location}</Text>
-            <Text style={styles.cardTime}>{upcomingConsultation.time}</Text>
-          </View>
-        </View> */}
-      </View>
+   
     </ScrollView>
   );
 };
@@ -175,7 +143,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 10,
     elevation: 5,
-    marginBottom:10,
+    marginBottom: 10,
   },
   cardImage: {
     width: 50,
@@ -228,4 +196,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default HistoryMedicineScreen;
