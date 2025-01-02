@@ -18,6 +18,15 @@ import PetDetailScreen from "../screen/pet/PetDetailScreen";
 import EditPetScreen from "../screen/pet/PetEditScreen";
 import AddPetScreen from "../screen/pet/PetAddScreen";
 import TrackingScreen from "../screen/Tracking/TrackingScreen";
+import VaccineScreen from "../screen/Vaccine/VaccineScreen";
+import AppointmentScreen from "../screen/Appointment/AppointmentScreen";
+import MedicineScreen from "../screen/Medicine/MedicineScreen";
+import AddVaccineScreen from "../screen/Vaccine/AddVaccineScreen";
+import AddMedicineScreen from "../screen/Medicine/AddMedicineScreen";
+import EditMedicineScreen from "../screen/Medicine/EditMedicineScreen";
+import EditProfileScreen from "../screen/Setting/EditProfile";
+import ViewOwnerProfile from "../screen/Owner/ViewOwnerProfile";
+import ListPetScreen from "../screen/pet/ListPetScreen";
 
 
 // ? If you want to use stack or tab or both
@@ -43,8 +52,8 @@ const Navigation = () => {
             case SCREENS.HOME:
                 iconName = focused ? "home" : "home-outline";
                 break;
-            case SCREENS.TESTSCREEN:
-                iconName = focused ? "calendar" : "calendar-clear-outline";
+            case SCREENS.LISTPET:
+                iconName = focused ? "list" : "list-outline";
                 break;
             case SCREENS.LOGIN:
                 iconName = focused ? "person" : "person-outline";
@@ -92,8 +101,8 @@ const Navigation = () => {
                 />
 
                 <Tab.Screen
-                    name={SCREENS.TESTSCREEN}
-                    component={TestScreen}
+                    name={SCREENS.LISTPET}
+                    component={ListPetScreen}
                 />
                 <Tab.Screen
                     name={SCREENS.PROFILE}
@@ -117,13 +126,20 @@ const Navigation = () => {
                 <Stack.Screen name={SCREENS.LOGIN} component={LoginScreen} />
                 <Stack.Screen name={SCREENS.ROOT} component={renderTabNavigation} />
                 <Stack.Screen name={SCREENS.REGISTER} component={RegisterScreen} />
-                <Stack.Screen name={SCREENS.PETDETAIL}>
+                <Stack.Screen name={SCREENS.VIEWPET}>
                     {(props) => <PetDetailScreen {...props} />}
                 </Stack.Screen>
-                <Stack.Screen name={SCREENS.EDITPET}>
-                    {(props) => <EditPetScreen {...props} />}
+                <Stack.Screen name={SCREENS.ADDVACCINE} component={AddVaccineScreen} />
+                <Stack.Screen name={SCREENS.ADDMEDICINE} component={AddMedicineScreen} />
+                <Stack.Screen name={SCREENS.EDITMEDICINE}>
+                    {(props) => <EditMedicineScreen {...props} />}
                 </Stack.Screen>
-                <Stack.Screen name={SCREENS.ADDPET} component={AddPetScreen} />
+
+                <Stack.Screen name={SCREENS.VACCINE} component={VaccineScreen} />
+                <Stack.Screen name={SCREENS.MEDICINE} component={MedicineScreen} />
+                <Stack.Screen name={SCREENS.APPOINMENT} component={AppointmentScreen} />
+                <Stack.Screen name={SCREENS.EDITPROFILE} component={EditProfileScreen} />
+                <Stack.Screen name={SCREENS.VIEWOWNERPROFILE} component={ViewOwnerProfile} />
 
             </Stack.Navigator>
         </NavigationContainer>

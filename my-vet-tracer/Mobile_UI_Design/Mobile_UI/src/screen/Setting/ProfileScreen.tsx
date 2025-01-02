@@ -17,6 +17,7 @@ import * as NavigationService from "react-navigation-helpers";
 import { useGetUserInfo } from "../../queries/auth/useGetUserInfo";
 import { SCREENS } from "../../shared/constants";
 import { useGetListPets } from "../../queries/pet/useGetPets";
+import { useGetAppointmentsByPets } from "../../queries/appoinment/useGetAppointmentByPet";
 
 
 const ProfileScreen: React.FC = () => {
@@ -27,18 +28,43 @@ const ProfileScreen: React.FC = () => {
   const { data: pets, isFetching: isFetchingPets } = useGetListPets(userinfo?.idOwnerUser || 0);
   const petsCount = pets?.length || 0;
 
+  const petIds = pets?.map((pet) => pet.idPet) || [];
+
+  const { data: appointments, isFetching: isFetchingAppointments } = useGetAppointmentsByPets(petIds);
+
+  if (isFetchingPets || isFetchingAppointments) {
+    return <Text>Loading...</Text>;
+  } 
   const handleItemPress = (id: number) => {
-    NavigationService.push(SCREENS.EDITPROFILE, { idOwnerUser: id });
+    NavigationService.push(SCREENS.EDITUSERPROFILE, { idOwnerUser: id });
 
   };
+  const sortedAppointments = [...(appointments || [])]
+    .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
+    .filter((a) => new Date(a.time) >= new Date())
+    .slice(0, 3);
+
+  const renderAppointmentItem = ({ item }: { item: any }) => {
+    const pet = pets?.find((p) => p.idPet === item.pet.idPet);
+    return (
+      <View style={styles.card}>
+        <Image source={{ uri: pet?.img }} style={styles.cardImage} />
+        <View style={styles.cardDetails}>
+          <Text style={styles.cardName}>{item.time}</Text>
+          <Text style={styles.cardSubtitle}>{item.veterinarian}</Text>
+          <Text style={styles.cardTime}>Pet Name: {pet?.petName || "Unknown"}</Text>
+
+        </View>
+      </View>
+    )
+
+  }
   return (
     <ScrollView>
       <View style={styles.container}>
         {/* Gradient Header */}
         <LinearGradient
           colors={["#d1fdff", "#fddb92"]}
-          // colors={["#84fab0", "#84fab0", "#8fd3f4"]}
-
           style={styles.header}
         >
           <TouchableOpacity
@@ -89,20 +115,10 @@ const ProfileScreen: React.FC = () => {
         </View>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Upcoming Consultation</Text>
-          <FlatList data={pets}
-            renderItem={({ item }) => {
-              return (
-                <View style={styles.card}>
-                  <Image source={{ uri: item.img }} style={styles.cardImage} />
-                  <View style={styles.cardDetails}>
-                    <Text style={styles.cardName}>{item.petName}</Text>
-                    <Text style={styles.cardSubtitle}>{item.petType}</Text>
-                    <Text style={styles.cardTime}>{item.height} || {item.weight}</Text>
+          <FlatList data={sortedAppointments}
+            keyExtractor={(item) => `${item.idAppointment}`}
+            renderItem={renderAppointmentItem}
 
-                  </View>
-                </View>
-              );
-            }}
           />
         </View>
         <TouchableOpacity

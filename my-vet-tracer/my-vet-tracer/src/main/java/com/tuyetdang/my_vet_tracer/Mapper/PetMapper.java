@@ -13,8 +13,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface PetMapper {
     Pet toPet(CreatePetRequest request);
-    // PetResponse toUserResponse(Pet pet);
-
 
     PetMapper INSTANCE = Mappers.getMapper(PetMapper.class);
     @Mappings({

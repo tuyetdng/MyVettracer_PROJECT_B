@@ -4,6 +4,7 @@ import useHttpPublicRequest from "../../services/httpRequest/useHttpPublicReques
 
 const useApi = () => {
     const publicApi = useHttpPublicRequest("http://10.0.2.2:8080/myvettracer");
+    const privateApi = useHttpPrivateRequest("http://10.0.2.2:8080/myvettracer");
 
 
     //Get all pet
@@ -16,14 +17,21 @@ const useApi = () => {
         return publicApi.get(`/pet/${pet_id}`, {});
     };
 
+    const getPetOfVetByVetId = (vet_id: number) => {
+        return publicApi.get(`/pet/pet-vet/${vet_id}`, {});
+    };
     const getVetOfPetByPetId = (pet_id: number) => {
         return publicApi.get(`/pet/pet-vetpet/${pet_id}`, {});
     };
-
+    const getOwnerOfPetByPetId = (pet_id: number) => {
+        return publicApi.get(`/pet/pet-ownerpet/${pet_id}`, {});
+    };
     return {
         getPetsOfOwnerUser,
         getPetByID,
-        getVetOfPetByPetId
+        getPetOfVetByVetId,
+        getVetOfPetByPetId,
+        getOwnerOfPetByPetId
     };
 };
 

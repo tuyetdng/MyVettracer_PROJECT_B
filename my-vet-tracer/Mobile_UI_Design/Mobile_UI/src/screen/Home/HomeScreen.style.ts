@@ -4,6 +4,7 @@ import { ScreenWidth } from "@freakycoder/react-native-helpers";
 
 interface Style {
   container: ViewStyle;
+  loadingGif: ImageStyle;
   header: TextStyle;
   listContainer: ViewStyle;
   row: ViewStyle;
@@ -23,6 +24,12 @@ export default (theme: Theme) => {
       flex: 1,
       backgroundColor: '#ffff',
       padding: 20,
+    },
+    loadingGif: {
+      width: 100,
+      height: 100,
+      alignSelf: "center",
+      marginTop: 20, 
     },
     header: {
       fontSize: 24,

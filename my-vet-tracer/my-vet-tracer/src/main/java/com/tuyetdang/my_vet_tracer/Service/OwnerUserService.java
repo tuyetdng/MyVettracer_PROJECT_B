@@ -70,6 +70,11 @@ public class OwnerUserService {
                 .orElseThrow(() -> new RuntimeException("Owner User not found")));
     }
 
+    public OwnerUserResponse viewOwnerUser(Integer Id) {
+        return userMapper.toUserResponse(userRepository.findById(Id)
+                .orElseThrow(() -> new RuntimeException("Owner User not found")));
+    }
+
     public OwnerUserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String name = context.getAuthentication().getName();

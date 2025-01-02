@@ -48,6 +48,13 @@ public class OwnerUserController {
                 .build();
     }
 
+    @GetMapping("viewOwner/{user_id}")
+    APIResponse<OwnerUserResponse> viewOwnerUser(@PathVariable int user_id) {
+        return APIResponse.<OwnerUserResponse>builder()
+                .result(userService.viewOwnerUser(user_id))
+                .build();
+    }
+
     @GetMapping("/myinfo")
     APIResponse<OwnerUserResponse> getMyInfo() {
         return APIResponse.<OwnerUserResponse>builder()

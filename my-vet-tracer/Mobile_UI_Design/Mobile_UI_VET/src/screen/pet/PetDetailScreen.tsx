@@ -13,13 +13,14 @@ import * as NavigationService from "react-navigation-helpers";
 import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import { SCREENS } from "../../shared/constants";
 import { useNavigation } from "@react-navigation/native";
+import { useGetVetUserInfo } from "../../queries/vet/useGetUserInfo";
+import { useGetOwnerOfPetByPetId } from "../../queries/pet/useGetOwnerOfPetByPetId";
 
 interface PetDetailScreenProps {
   route: any;
   data: PetResponseType;
 }
 const PetDetailScreen: React.FC<PetDetailScreenProps> = ({ route }) => {
-  const navigation = useNavigation();
 
   const { idPet } = route.params;
   const { data, isFetching: isFetchingPets } = useGetPetById(idPet);
@@ -27,7 +28,7 @@ const PetDetailScreen: React.FC<PetDetailScreenProps> = ({ route }) => {
   const { colors } = theme;
   const styles = useMemo(() => createStyles(theme), [theme]);
 
-  const { data: owner } = useGetUserInfo();
+  const { data: owner } = useGetOwnerOfPetByPetId(idPet);
   if (!owner) {
     return <Text>Loading or Error: No user info available</Text>;
   }
@@ -35,10 +36,12 @@ const PetDetailScreen: React.FC<PetDetailScreenProps> = ({ route }) => {
   if (isFetchingPets) {
     return <Text>Loading...</Text>;
   }
-  const handleItemPress = (id: number) => {
-    NavigationService.push(SCREENS.EDITPET, { idPet: id });
+  const handleItemPress = (idOwnerUser: number) => {
+    console.log("Owner Id:", idOwnerUser);
+
+    NavigationService.push(SCREENS.VIEWOWNERPROFILE, { idOwnerUser: idOwnerUser });
   };
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => NavigationService.goBack()} style={styles.goBackButton}>
@@ -93,24 +96,12 @@ const PetDetailScreen: React.FC<PetDetailScreenProps> = ({ route }) => {
         />
         <View>
           <Text style={styles.ownerName}>{owner?.fullName}</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => handleItemPress(owner?.idOwnerUser)}>
             <Text style={styles.viewProfile}>View Profile</Text>
           </TouchableOpacity>
         </View>
       </View>
 
-
-      <TouchableOpacity
-        style={styles.adoptButton}
-        onPress={() => {
-          if (data?.idPet !== undefined) {
-            handleItemPress(data.idPet);
-          } else {
-            console.warn("Pet ID is undefined");
-          }
-        }}
-      >        <Text style={styles.adoptButtonText}>Edit</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };

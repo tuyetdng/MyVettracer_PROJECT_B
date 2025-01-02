@@ -100,6 +100,20 @@ public class AppointmentService {
                 .collect(Collectors.toList());
     }
 
+    public AppointmentResponse confirmAppointment(Integer idAppointment) {
+        Appointment appointment = appointmentRepository.findById(idAppointment)
+                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+
+        if (appointment.getIsConfirmed() == 0) {
+            appointment.setIsConfirmed(1);
+        } else {
+            throw new RuntimeException("Appointment not found");
+        }
+
+        return appointmentMapper.toAppointmentResponse(appointmentRepository.save(appointment));
+    }
+
+
     public AppointmentResponse updateAppointment(Integer app_id, UpdateAppointmentRequest request) {
         Appointment appointment = appointmentRepository.findById(app_id)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));

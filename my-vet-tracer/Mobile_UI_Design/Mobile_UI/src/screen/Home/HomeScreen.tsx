@@ -17,7 +17,12 @@ const HomeScreen: React.FC = () => {
   const { data: pets, isFetching: isFetchingPets } = useGetListPets(owner?.idOwnerUser || 0);
 
   if (isOwnerLoading || isFetchingPets) {
-    return <Text>Loading...</Text>;
+    return (
+      <Image
+        source={{ uri: "https://i.pinimg.com/originals/13/fa/be/13fabe368d08211706da14d461727b50.gif" }}
+        style={styles.loadingGif}
+      />
+    );
   }
 
   if (!owner) {
@@ -46,7 +51,7 @@ const HomeScreen: React.FC = () => {
         <Text style={[styles.header, { marginLeft: 10 }]}>Hello {owner?.fullName}</Text>
       </View>
       <View style={{ borderBottomWidth: 1, borderBottomColor: '#5EC088', marginBottom: 10 }} />
-      <Text style={[styles.header, { marginBottom: 30,fontWeight: "bold", }]}> My List Pets  ฅ^._.^ฅ</Text>
+      <Text style={[styles.header, { marginBottom: 30, fontWeight: "bold", }]}> My List Pets  ฅ^._.^ฅ</Text>
 
       <FlatList
         data={pets}

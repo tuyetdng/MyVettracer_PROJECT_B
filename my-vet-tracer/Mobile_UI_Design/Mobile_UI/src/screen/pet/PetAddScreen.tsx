@@ -21,6 +21,7 @@ import { useQueryClient } from "react-query";
 import { API_QUERIES } from "../../queries/keys";
 import * as NavigationService from "react-navigation-helpers";
 import { VetResponseType } from "../../queries/vet/types";
+import { SCREENS } from "../../shared/constants";
 
 const AddPetScreen: React.FC = () => {
   const theme = useTheme();
@@ -95,6 +96,7 @@ const AddPetScreen: React.FC = () => {
     }
   };
   const handleViewDetails = (vet_id: number) => {
+    NavigationService.push(SCREENS.VIEWVETPROFILE, { vet_id: vet_id });
 
   }
   const renderVetItem = ({ item }: { item: VetResponseType }) => (
@@ -134,12 +136,7 @@ const AddPetScreen: React.FC = () => {
             size={35}
           />
         </TouchableOpacity>
-
-        <View style={{ flexDirection: "row", alignItems: "center", marginLeft: 70, }}>
           <Text style={styles.imageContainer}>Add New Pet</Text>
-          <Image source={{ uri: 'https://i.pinimg.com/736x/c9/0b/0d/c90b0db71e33975ab69912ff1a0602e6.jpg' }} style={styles.petImage} />
-
-        </View>
       </View>
       <View style={{ borderBottomWidth: 1, borderBottomColor: '#5EC088', marginBottom: 20 }} />
 

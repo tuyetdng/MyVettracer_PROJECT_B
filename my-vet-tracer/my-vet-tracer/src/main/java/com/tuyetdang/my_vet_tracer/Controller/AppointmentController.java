@@ -66,6 +66,12 @@ public class AppointmentController {
                 .build();
     }
 
+    @PatchMapping("/confirm/{id}")
+    public APIResponse<AppointmentResponse> confirmAppointment(@PathVariable Integer id) {
+        return APIResponse.<AppointmentResponse>builder()
+                .result(appointmentService.confirmAppointment(id))
+                .build();
+    }
     @PutMapping("/{app_id}")
     APIResponse<AppointmentResponse> updateAppointment(@PathVariable Integer app_id, @RequestBody @Valid UpdateAppointmentRequest request) {
         return  APIResponse.<AppointmentResponse>builder()

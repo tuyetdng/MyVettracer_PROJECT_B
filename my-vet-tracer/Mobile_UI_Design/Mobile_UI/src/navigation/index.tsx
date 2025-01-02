@@ -18,6 +18,13 @@ import PetDetailScreen from "../screen/pet/PetDetailScreen";
 import EditPetScreen from "../screen/pet/PetEditScreen";
 import AddPetScreen from "../screen/pet/PetAddScreen";
 import TrackingScreen from "../screen/Tracking/TrackingScreen";
+import VaccineScreen from "../screen/Vaccine/VaccineScreen";
+import MedicineScreen from "../screen/Medicine/MedicineScreen";
+import AppointmentScreen from "../screen/Appointment/AppointmentScreen";
+import AddAppointmentScreen from "../screen/Appointment/AddAppointmentScreen";
+import BeforeAddAppointmentScreen from "../screen/Appointment/BeforeAddAppointmentScreen";
+import ViewVetProfileScreen from "../screen/Vet/ViewVetProfileScreen";
+import EditProfileScreen from "../screen/Setting/EditProfile";
 
 
 // ? If you want to use stack or tab or both
@@ -44,7 +51,7 @@ const Navigation = () => {
                 iconName = focused ? "home" : "home-outline";
                 break;
             case SCREENS.TESTSCREEN:
-                iconName = focused ? "calendar" : "calendar-clear-outline";
+                iconName = focused ? "chatbox" : "chatbox-outline";
                 break;
             case SCREENS.LOGIN:
                 iconName = focused ? "person" : "person-outline";
@@ -124,6 +131,17 @@ const Navigation = () => {
                     {(props) => <EditPetScreen {...props} />}
                 </Stack.Screen>
                 <Stack.Screen name={SCREENS.ADDPET} component={AddPetScreen} />
+                <Stack.Screen name={SCREENS.VACCINE} component={VaccineScreen} />
+                <Stack.Screen name={SCREENS.MEDICINE} component={MedicineScreen} />
+                <Stack.Screen name={SCREENS.APPOINMENT} component={AppointmentScreen} />
+                <Stack.Screen name={SCREENS.BEFOREADDAPPOINTMENT} component={BeforeAddAppointmentScreen} />
+                <Stack.Screen name={SCREENS.ADDAPPOINMENT}>
+                    {(props) => <AddAppointmentScreen {...props} />}
+                </Stack.Screen>
+                <Stack.Screen name={SCREENS.VIEWVETPROFILE}>
+                    {(props) => <ViewVetProfileScreen {...props} />}
+                </Stack.Screen>
+                <Stack.Screen name={SCREENS.EDITUSERPROFILE} component={EditProfileScreen} />
 
             </Stack.Navigator>
         </NavigationContainer>

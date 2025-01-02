@@ -11,10 +11,14 @@ const useApi = () => {
         return publicApi.get(`/vaccine/pet-vac/${idPet}`, {});
     };
 
-
+    //Get appointment by vet
+    const getVaccineByVet = (idVet: number) => {
+        return publicApi.get(`/vaccine/vet-vac/${idVet}`, {});
+    };
 
     return {
         getVaccineByPet,
+        getVaccineByVet
     };
 };
 

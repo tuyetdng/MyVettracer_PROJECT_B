@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Veterinary Tracker</title>
+    <!-- plugins:css -->
+    <link rel="stylesheet" href="../../vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../../vendors/base/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="../../css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="../../images/favicon.png" />
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        i {
+            color: #07476a;
+            font-size: 20px;
+        }
+
+        .containerTitle {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .left-alignTitle {
+            text-align: left;
+        }
+
+        .right-alignTitle {
+            text-align: right;
+        }
+
+        .popup-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+            max-height: 80vh;
+            /* Set max height to 80% of the viewport height */
+            overflow-y: auto;
+            /* Enable vertical scrolling when content overflows */
+        }
+
+
+        .popup-form h2 {
+            margin: 0 0 10px 0;
+            font-size: 30px;
+            text-align: left;
+        }
+
+        .form-title-line {
+            border: none;
+            border-top: 1.5px solid #00d33f;
+            margin: 10px 0;
+        }
+
+
+        .popup-form input[type="text"],
+        .popup-form input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .popup-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .popup-form input[type="button"] {
+            width: 100%;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            background-color: #13AA52;
+            color: white;
+            border: none;
+            cursor: pointer;
+
+        }
+
+        .popup-close {
+            float: right;
+            cursor: pointer;
+        }
+
+        .button-without-background {
+            background-color: transparent;
+            /* Set background color to transparent */
+            border: none;
+            /* Remove border */
+            padding: 0;
+            /* Remove padding */
+            /* Additional styles as needed */
+        }
+    </style>
+    <!-- fetch api -->
+
+    <script>
+        const token = localStorage.getItem("authToken");
+
+        async function AddMedicine() {
+            const payload = {
+                medName: document.getElementById("newMedName").value,
+                dose: document.getElementById("newDose").value,
+                amount: document.getElementById("newAmount").value,
+                notice: document.getElementById("newNotice").value,
+                total: parseFloat(document.getElementById("newTotal").value),
+                idPet: parseInt(document.getElementById("newPetId").value),
+                idUser: parseInt(document.getElementById("newVeterinarianId").value)
+            };
+
+            try {
+                const response = await fetch(`http://localhost:8085/http://localhost:8080/myvettracer/medicine`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error: ${response.statusText}`);
+                }
+
+                Swal.fire(" Medicine has been added!").then(() => {
+                    document.getElementById('addMedicineForm').style.display = 'none';
+                    RenderMedicines();
+                });
+            } catch (error) {
+                console.error(`Error: ${error.message}`);
+                Swal.fire("Error", "Failed to add data. Please try again.", "error");
+            }
+        }
+
+        function addMedicineToggleForm() {
+            var form = document.getElementById('addMedicineForm');
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function editMedicineToggleForm(button) {
+            var form = document.getElementById('editMedicineForm');
+
+            if (form.style.display === 'block') {
+                form.style.display = 'none';
+                return;
+            } else {
+                form.style.display = 'block';
+            }
+
+            var row = button.parentNode.parentNode;
+            var idMed = row.cells[1].innerText;
+            var medName = row.cells[2].innerText;
+            var amount = row.cells[3].innerText;
+            var dose = row.cells[4].innerText;
+            var idUser = row.cells[5].innerText;
+            var petId = row.cells[6].innerText;
+            var notice = row.cells[7].innerText;
+            var total = row.cells[8].innerText;
+
+            document.getElementById("medName").value = medName;
+            document.getElementById("dose").value = dose;
+            document.getElementById("amount").value = amount;
+            document.getElementById("notice").value = notice;
+            document.getElementById("total").value = total;
+            document.getElementById("petId").value = petId;
+            document.getElementById("veterinarianId").value = idUser;
+
+            document.getElementById("editButton").onclick = function () {
+                EditMedicine(idMed);
+            };
+        }
+
+        async function EditMedicine(key) {
+            const payload = {
+                idMed: key,
+                medName: document.getElementById("medName").value,
+                dose: document.getElementById("dose").value,
+                amount: document.getElementById("amount").value,
+                notice: document.getElementById("notice").value,
+                total: parseFloat(document.getElementById("total").value),
+                idPet: parseInt(document.getElementById("petId").value),
+                idUser: parseInt(document.getElementById("veterinarianId").value)
+            };
+            console.log(key);
+            console.log(payload);
+
+            try {
+                const response = await fetch(`http://localhost:8085/http://localhost:8080/myvettracer/medicine/${key}`, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Data update error: ${response.statusText}`);
+                }
+
+                Swal.fire(" Medicine has been changed!").then(() => {
+                    document.getElementById('editMedicineForm').style.display = 'none';
+                    RenderMedicines();
+                });
+            } catch (error) {
+                console.error(`Error: ${error.message}`);
+                Swal.fire("Error", "Failed to save data. Please try again.", "error");
+            }
+        }
+
+        async function deletePostByKey(key) {
+            console.log("Deleting medicine with key: " + key);
+
+            try {
+                const result = await Swal.fire({
+                    title: `Are you sure to delete the medicine ${key}?`,
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!",
+                });
+
+                if (result.isConfirmed) {
+                    const url = `http://localhost:8085/http://localhost:8080/myvettracer/medicine/${key}`;
+
+                    const response = await fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                    });
+
+                    if (!response.ok) {
+                        const errorMsg = await response.text();
+                        throw new Error(`Failed to delete: ${errorMsg}`);
+                    }
+
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "The data has been deleted.",
+                        icon: "success",
+                    });
+
+                    await RenderMedicines();
+                }
+            } catch (err) {
+                console.error('Error:', err);
+                Swal.fire({
+                    title: "Error!",
+                    text: err.message,
+                    icon: "error",
+                });
+            }
+        }
+
+        async function RenderMedicines() {
+            const data = await GetMedicineData();
+
+            if (!data) {
+                console.error('Cannot get data from API.');
+                return;
+            }
+            let str = '';
+            for (let i = 0; i < data.result.length; i++) {
+                const medicine = data.result[i];
+                const petId = medicine.pet.idPet || 'N/A';
+                const idvetUser = medicine.vetUser.idVetUser || 'N/A';
+                str += `<tr>
+        <td>${i + 1}</td>
+        <td>${medicine.idMed}</td>
+        <td>${medicine.medName}</td>
+        <td>${medicine.amount}</td>
+        <td>${medicine.dose}</td>
+        <td>${idvetUser}</td>
+        <td>${petId}</td>
+        <td>${medicine.notice || ''}</td>
+        <td>${medicine.total}</td>
+        
+        <td>
+            <button class="button-without-background" onclick="editMedicineToggleForm(this)"><i class="mdi mdi-table-edit"></i></button>
+            <button class="button-without-background" onclick="deletePostByKey(${medicine.idMed})"><i class="mdi mdi-delete-forever"></i></button>
+        </td>
+    </tr>`;
+            }
+
+            document.getElementById("MedicineBody").innerHTML = str;
+        }
+
+        async function GetMedicineData() {
+            const url = 'http://localhost:8085/http://localhost:8080/myvettracer/medicine';
+            try {
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }); if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const json = await response.json();
+                return json;
+
+            } catch (error) {
+                console.error(error.message);
+            }
+            return null;
+        }
+    </script>
+
+</head>
+
+<body>
+    <div class="container-scroller">
+        <!-- partial:../../partials/_navbar.html -->
+        <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+            <div class="navbar-brand-wrapper d-flex justify-content-center">
+                <div class="navbar-brand-inner-wrapper d-flex justify-content-between align-items-center w-100">
+                    <a class="navbar-brand brand-logo" href="../../index.html"><img
+                            src="../../images/logo-pet-mini-v2.svg" alt="logo" /></a>
+                    <a class="navbar-brand brand-logo-mini" href="../../index.html"><img
+                            src="../../images/logo-pet-mini-v2.svg" alt="logo" /></a>
+                    <button class="navbar-toggler navbar-toggler align-self-center" type="button"
+                        data-toggle="minimize">
+                        <span class="mdi mdi-sort-variant"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+                <!-- Search Side -->
+                <ul class="navbar-nav mr-lg-4 w-100">
+                    <li class="nav-item nav-search d-none d-lg-block w-100">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="search">
+                                    <i class="mdi mdi-magnify"></i>
+                                </span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search now" aria-label="search"
+                                aria-describedby="search">
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav navbar-nav-right">
+                    <!-- Message side -->
+                    <li class="nav-item dropdown me-1">
+                        <a class="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
+                            id="messageDropdown" href="#" data-bs-toggle="dropdown">
+                            <i class="mdi mdi-message-text mx-0"></i>
+                            <span class="count"></span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                            aria-labelledby="messageDropdown">
+                            <p class="mb-0 font-weight-normal float-left dropdown-header">Messages</p>
+                        </div>
+                    </li>
+                    <!-- Notification side -->
+                    <li class="nav-item dropdown me-4">
+                        <a class="nav-link count-indicator dropdown-toggle d-flex align-items-center justify-content-center notification-dropdown"
+                            id="notificationDropdown" href="#" data-bs-toggle="dropdown">
+                            <i class="mdi mdi-bell mx-0"></i>
+                            <span class="count"></span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                            aria-labelledby="notificationDropdown">
+                            <p class="mb-0 font-weight-normal float-left dropdown-header">Notifications</p>
+                        </div>
+                    </li>
+                    <!-- Admin menu side -->
+                    <li class="nav-item nav-profile dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" id="profileDropdown">
+                            <img src="../../images/faces/face5.png" alt="profile" />
+                            <span class="nav-profile-name">Admin</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
+                            aria-labelledby="profileDropdown">
+                            <a class="dropdown-item">
+                                <i class="mdi mdi-settings text-primary"></i>
+                                Settings
+                            </a>
+                            <a class="dropdown-item">
+                                <i class="mdi mdi-logout text-primary"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+                    data-toggle="offcanvas">
+                    <span class="mdi mdi-menu"></span>
+                </button>
+            </div>
+        </nav>
+        <!-- partial -->
+        <div class="container-fluid page-body-wrapper">
+            <!-- partial:../../partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <ul class="nav">
+
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false"
+                            aria-controls="ui-basic">
+                            <i class="mdi mdi-account menu-icon"></i>
+                            <span class="menu-title">User</span>
+                            <i class="menu-arrow"></i>
+                        </a>
+                        <div class="collapse" id="ui-basic">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"> <a class="nav-link" href="../../pages/tables/OwnerUser.html">Pet
+                                        Owners</a></li>
+                                <li class="nav-item"> <a class="nav-link"
+                                        href="../../pages/tables/VeterinarianUser.html">Veterinarians</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/tables/Pet.html">
+                            <i class="mdi mdi-paw menu-icon"></i>
+                            <span class="menu-title">Pets</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/tables/Appointment.html">
+                            <i class="mdi mdi-calendar-clock menu-icon"></i>
+                            <span class="menu-title">Appointments</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/tables/Medicine.html">
+                            <i class="mdi mdi-hospital menu-icon"></i>
+                            <span class="menu-title">Medicine</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../pages/tables/Vaccine.html">
+                            <i class="mdi mdi-needle menu-icon"></i>
+                            <span class="menu-title">Vaccine</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <!-- partial -->
+            <div class="main-panel">
+                <div class="content-wrapper">
+                    <div class="row">
+                        <div class="col-lg-12 grid-margin stretch-card">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="containerTitle">
+                                        <div class=" left-alignTitle">
+                                            <h3 style="color: rgb(92, 92, 97); font-weight: 700;">Medicine Table</h3>
+                                        </div>
+                                        <div class=" right-alignTitle">
+                                            <button type="button" class="btn btn-outline-primary btn-icon-text"
+                                                onclick="addMedicineToggleForm()">
+                                                <i class="mdi mdi-playlist-plus"></i>Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive pt-3">
+                                        <table class="table table-border table-hover">
+                                            <thead>
+                                                <tr class="bg-primary text-white">
+                                                    <th>#</th>
+                                                    <th>ID</th>
+                                                    <th>Medicine</th>
+                                                    <th>Amount</th>
+                                                    <th>Dosage</th>
+                                                    <th>Veterinarian ID</th>
+                                                    <th>Pet ID</th>
+                                                    <th>Notice</th>
+                                                    <th>Total</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="MedicineBody">
+
+                                            </tbody>
+                                        </table>
+
+                                        <!-- Edit Medicine Form -->
+                                        <div class="popup-form" id="editMedicineForm">
+                                            <span class="popup-close" onclick="editMedicineToggleForm()">X</span>
+                                            <form>
+                                                <h2>Edit Medicine Information</h2>
+                                                <hr class="form-title-line">
+                                                <table cellspacing="10px" cellpadding="10px">
+                                                    <colgroup style="width: 100%;">
+                                                        <col span="1" style="width: 50%;">
+                                                        <col span="1" style="width: 50%;">
+                                                    </colgroup>
+                                                    <tr>
+
+                                                        <td>
+                                                            <label for="medName">Medicine Name:</label><br>
+                                                            <input type="text" id="medName" name="medName" required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="amount">Amount:</label><br>
+                                                            <input type="text" id="amount" name="amount" required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="dose">Dosage:</label><br>
+                                                            <input type="text" id="dose" name="dose" required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="veterinarianId">Veterinarian ID:</label><br>
+                                                            <input type="text" id="veterinarianId" name="veterinarianId"
+                                                                required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="petId">Pet ID:</label><br>
+                                                            <input type="text" id="petId" name="petId" required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="notice">Notice:</label><br>
+                                                            <input type="text" id="notice" name="notice"><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="total">Total:</label><br>
+                                                            <input type="text" id="total" name="total" required><br>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <input type="button" id="editButton" value="Edit"
+                                                    onclick="EditMedicine()">
+                                            </form>
+                                        </div>
+
+                                        <!-- Add Medicine Form -->
+                                        <div class="popup-form" id="addMedicineForm">
+                                            <span class="popup-close" onclick="addMedicineToggleForm()">X</span>
+                                            <form>
+                                                <h2>Add Medicine</h2>
+                                                <hr class="form-title-line">
+                                                <table cellspacing="10px" cellpadding="10px">
+                                                    <colgroup style="width: 100%;">
+                                                        <col span="1" style="width: 50%;">
+                                                        <col span="1" style="width: 50%;">
+                                                    </colgroup>
+                                                    <tr>
+
+                                                        <td>
+                                                            <label for="newMedName">Medicine Name:</label><br>
+                                                            <input type="text" id="newMedName" name="newMedName"
+                                                                required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="newAmount">Amount:</label><br>
+                                                            <input type="text" id="newAmount" name="newAmount"
+                                                                required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="newDose">Dosage:</label><br>
+                                                            <input type="text" id="newDose" name="newDose" required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="newVeterinarianId">Veterinarian
+                                                                ID:</label><br>
+                                                            <input type="text" id="newVeterinarianId"
+                                                                name="newVeterinarianId" required><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="newPetId">Pet ID:</label><br>
+                                                            <input type="text" id="newPetId" name="newPetId"
+                                                                required><br>
+                                                        </td>
+                                                        <td>
+                                                            <label for="newNotice">Notice:</label><br>
+                                                            <input type="text" id="newNotice" name="newNotice"><br>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <label for="newTotal">Total:</label><br>
+                                                            <input type="text" id="newTotal" name="newTotal"
+                                                                required><br>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <input type="button" id="addButton" value="Add" onclick="AddMedicine()">
+                                            </form>
+                                        </div>
+
+
+                                        <script>
+                                            RenderMedicines();
+
+                                        </script>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- content-wrapper ends -->
+                <!-- partial:../../partials/_footer.html -->
+                <footer class="footer">
+                    <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                        <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © <a
+                                href="https://www.bootstrapdash.com/" target="_blank">bootstrapdash.com </a>2021</span>
+                        <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Only the best
+                            templates</span>
+                    </div>
+                </footer>
+                <!-- partial -->
+            </div>
+            <!-- main-panel ends -->
+        </div>
+        <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <script src="../../vendors/base/vendor.bundle.base.js"></script>
+    <!-- endinject -->
+    <!-- Plugin js for this page-->
+    <!-- End plugin js for this page-->
+    <!-- inject:js -->
+    <script src="../../js/off-canvas.js"></script>
+    <script src="../../js/hoverable-collapse.js"></script>
+    <script src="../../js/template.js"></script>
+    <!-- endinject -->
+    <!-- Custom js for this page-->
+    <!-- End custom js for this page-->
+</body>
+
+</html>

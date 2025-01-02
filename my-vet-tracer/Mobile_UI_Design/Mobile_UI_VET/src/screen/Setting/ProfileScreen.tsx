@@ -1,6 +1,5 @@
-import React, { useMemo } from "react";
+import React, { useState } from "react";
 import {
-  FlatList,
   Image,
   ScrollView,
   StyleSheet,
@@ -9,36 +8,29 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
-import createStyles from "./ProfileScreen.style";
 import LinearGradient from "react-native-linear-gradient";
+
 import Icon, { IconType } from "react-native-dynamic-vector-icons";
 import * as NavigationService from "react-navigation-helpers";
-import { useGetUserInfo } from "../../queries/auth/useGetUserInfo";
+
+import styles from "./ProfileScreen.style";
 import { SCREENS } from "../../shared/constants";
-import { useGetListPets } from "../../queries/pet/useGetPets";
+import { useGetVetById } from "../../queries/vet/useGetVetById";
+import { useGetVetUserInfo } from "../../queries/vet/useGetUserInfo";
 
 
 const ProfileScreen: React.FC = () => {
-  const theme = useTheme();
-  const { colors } = theme;
-  const styles = useMemo(() => createStyles(theme), [theme]);
-  const { data: userinfo, onGetUserInfo } = useGetUserInfo();
-  const { data: pets, isFetching: isFetchingPets } = useGetListPets(userinfo?.idOwnerUser || 0);
-  const petsCount = pets?.length || 0;
+  const { data: vet } = useGetVetUserInfo();
 
-  const handleItemPress = (id: number) => {
-    NavigationService.push(SCREENS.EDITPROFILE, { idOwnerUser: id });
+  const handleItemPress = () => {
+    NavigationService.push(SCREENS.EDITUSERPROFILE);
 
   };
   return (
     <ScrollView>
       <View style={styles.container}>
-        {/* Gradient Header */}
         <LinearGradient
-          colors={["#d1fdff", "#fddb92"]}
-          // colors={["#84fab0", "#84fab0", "#8fd3f4"]}
-
+          colors={["#FF7E5F", "#FEB47B", "#cc66ff"]}
           style={styles.header}
         >
           <TouchableOpacity
@@ -51,73 +43,97 @@ const ProfileScreen: React.FC = () => {
               size={35}
             />
           </TouchableOpacity>
-          <Text style={styles.name}>{userinfo?.fullName || "Anonymous"}</Text>
-          <Text style={styles.role}>{userinfo?.userName || "User"}</Text>
+          <Text style={styles.name}>{vet?.fullName || "Anonymous"}</Text>
+          <Text style={styles.role}>{vet?.userName || "User"}</Text>
           <Text style={styles.location}>
-            <Icon name="paw" type={IconType.FontAwesome} size={18} />{" "}
-            {petsCount || "Opps, you dont have any pet now"}
+            <Icon name="map-marker" type={IconType.FontAwesome} size={14} />{" "}
+            {vet?.clinicAddress || "Unknown Location"}
           </Text>
 
           <Image
             style={styles.profileImage}
             source={{
-              uri: userinfo?.img || "https://via.placeholder.com/150",
+              uri: vet?.img || "https://via.placeholder.com/150",
             }}
           />
           <View style={styles.statsRow}>
             <View>
               <Text style={styles.iconButton}>
-                <Icon name="phone" type={IconType.FontAwesome} size={20} color="#FF7E5F" />
-                <Text style={{ fontSize: 18 }}> {"\t"} {userinfo?.phoneNum || "No phone available"}</Text>
+                <Icon
+                  name="phone"
+                  type={IconType.FontAwesome}
+                  size={20}
+                  color="#FF7E5F"
+                />
+                <Text> {"\t"} {vet?.phoneNum || "No phone available"}</Text>
               </Text>
             </View>
           </View>
         </LinearGradient>
 
+        <View style={styles.aboutSection}>
+          <Text style={styles.aboutTitle}>About Me</Text>
+          <Text style={styles.aboutDescription}>
+            {vet?.qualification || "No qualifications provided."}
+          </Text>
+          <Text style={styles.aboutDescription}>
+            {vet?.experience
+              ? `${vet?.experience} years of experience`
+              : "Experience not specified."}
+          </Text>
+        </View>
 
-        {/* Additional Info */}
         <View style={styles.infoSection}>
           <Text style={styles.infoItem}>
-            <Icon name="envelope" type={IconType.FontAwesome} size={18} /> {userinfo?.email || "N/A"}
+            <Icon
+              name="envelope"
+              type={IconType.FontAwesome}
+              size={14}
+            />{" "}
+            {vet?.email || "N/A"}
           </Text>
           <Text style={styles.infoItem}>
-            <Icon name="birthday-cake" type={IconType.FontAwesome} size={18} />{" " + userinfo?.dob || "Unknown"}
+            <Icon
+              name="birthday-cake"
+              type={IconType.FontAwesome}
+              size={14}
+            />{" "}
+            {vet?.dob || "Unknown"}
           </Text>
           <Text style={styles.infoItem}>
-            <Icon name="transgender" type={IconType.FontAwesome} size={18} /> {userinfo?.gender || "Not specified"}
+            <Icon
+              name="transgender"
+              type={IconType.FontAwesome}
+              size={14}
+            />{" "}
+            {vet?.gender || "Not specified"}
+          </Text>
+          <Text style={styles.infoItem}>
+            <Icon
+              name="stethoscope"
+              type={IconType.FontAwesome}
+              size={14}
+            />{" "}
+            {vet?.nameOfConsultingRoom || "No consulting room provided"}
+          </Text>
+          <Text style={styles.infoItem}>
+            <Icon
+              name="shield"
+              type={IconType.FontAwesome}
+              size={14}
+            />{" "}
+            {vet?.authentication === 1
+              ? "Verified"
+              : "Not verified"}
           </Text>
         </View>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Upcoming Consultation</Text>
-          <FlatList data={pets}
-            renderItem={({ item }) => {
-              return (
-                <View style={styles.card}>
-                  <Image source={{ uri: item.img }} style={styles.cardImage} />
-                  <View style={styles.cardDetails}>
-                    <Text style={styles.cardName}>{item.petName}</Text>
-                    <Text style={styles.cardSubtitle}>{item.petType}</Text>
-                    <Text style={styles.cardTime}>{item.height} || {item.weight}</Text>
-
-                  </View>
-                </View>
-              );
-            }}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={() => {
-            if (userinfo?.idOwnerUser) {
-              handleItemPress(userinfo.idOwnerUser);
-            } else {
-              console.warn("User ID is undefined");
-            }
-          }}
-        >
-          <Text style={styles.editButtonText}>Edit</Text>
-        </TouchableOpacity>
       </View>
+      <TouchableOpacity
+        style={styles.editButton}
+        onPress={() => { handleItemPress(); }}
+      >
+        <Text style={styles.editButtonText}>Edit</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };

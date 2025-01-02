@@ -30,13 +30,16 @@ const useApi = () => {
   const registerVet = (payload: LoginPayload) => {
     return publicApi.post("/vetuser", payload);
   };
-
+  const viewOwnerProfileById = (owner_id: number) => {
+    return privateApi.get(`/owneruser/viewOwner/${owner_id}`, {});
+};
   return {
     authenticate,
     getUserInfo,
     getRefreshToken,
     registerOwner,
     registerVet,
+    viewOwnerProfileById
   };
 };
 

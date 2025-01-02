@@ -21,6 +21,7 @@ public class PathConstant {
     public static final String[] PUBLIC_GET_ENDPOINTS = {
             OWNER_USER,
             OWNER_USER + "/user_id",
+            OWNER_USER + "/viewOwner/user_id",
             VET_USER,
             VET_USER + "/user_id",
             VET_USER + "/owner-get-vet",
@@ -69,18 +70,9 @@ public class PathConstant {
             MEDICINE + "/{mec_id}",
             VACCINE + "/{vac_id}"
     };
+    public static final String[] SECURED_PATCH_ENDPOINTS = {
+            APPOINTMENT + "/confirm/{id}",
+    };
 
-//    // Swagger & Other Public Utilities
-//    public static final String[] SWAGGER_ENDPOINTS = {
-//            "/swagger-ui/**",
-//            "/v3/api-docs/**"
-//    };
 
-    // Combine Public Endpoints
-//    public static final String[] PUBLIC_ENDPOINTS = concatArrays(PUBLIC_AUTH_ENDPOINTS, PUBLIC_GET_ENDPOINTS, PUBLIC_POST_ENDPOINTS, SWAGGER_ENDPOINTS);
-//
-//    // Utility to combine arrays
-//    private static String[] concatArrays(String[]... arrays) {
-//        return java.util.Arrays.stream(arrays).flatMap(java.util.Arrays::stream).toArray(String[]::new);
-//    }
 }

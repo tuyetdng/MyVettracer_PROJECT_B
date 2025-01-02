@@ -38,13 +38,21 @@ const createStyles = (theme: Theme) => {
       backgroundColor: '#ffffff',
     },
     goBackButton: {
-      marginBottom: 20,
+      position: "absolute",
+      left: 0,
+      top: 0,
+      zIndex: 1,
       flexDirection: "row",
       alignItems: "center",
+      marginBottom: 16,
     },
     imageContainer: {
       fontSize: 25,
       fontWeight: "bold",
+      alignItems: "center",
+      justifyContent: "center",
+      marginLeft: 120,
+      marginBottom: 16,
     },
     petImage: {
       width: 70,
